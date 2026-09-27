@@ -3,157 +3,283 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Power System Analysis – Quiz</title>
+
+  <title>Power System Analysis</title>
 
   <style>
+
     body {
       font-family: Arial, sans-serif;
+
       background: #f3f4f6;
+
       margin: 0;
       padding: 40px 20px;
+
       color: #111827;
     }
+
 
     .container {
+
       max-width: 700px;
+
       margin: auto;
+
     }
+
 
     h1 {
+
       text-align: center;
+
       margin-bottom: 10px;
+
     }
+
 
     .subtitle {
+
       text-align: center;
+
       color: #6b7280;
+
       margin-bottom: 35px;
+
     }
+
+
+    /* Kapitelkort */
 
     .quiz-card {
+
       background: white;
+
       padding: 20px;
+
       margin-bottom: 15px;
+
       border-radius: 12px;
+
       color: #111827;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+      box-shadow:
+        0 4px 12px
+        rgba(0,0,0,0.08);
+
       transition: 0.2s;
+
     }
+
 
     .quiz-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+
+      transform:
+        translateY(-2px);
+
+      box-shadow:
+        0 6px 16px
+        rgba(0,0,0,0.12);
+
     }
 
-    .quiz-link {
-      display: block;
-      background: white;
-      padding: 20px;
-      margin-bottom: 15px;
-      border-radius: 12px;
-      text-decoration: none;
-      color: #111827;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      transition: 0.2s;
-    }
-
-    .quiz-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-    }
 
     .quiz-title {
+
       font-size: 20px;
+
       font-weight: bold;
+
     }
+
 
     .quiz-description {
+
       margin-top: 6px;
+
       color: #6b7280;
+
+      line-height: 1.5;
+
     }
+
+
+    /* Knappar */
 
     .quiz-actions {
+
       display: flex;
+
       gap: 10px;
+
       margin-top: 16px;
+
       flex-wrap: wrap;
+
     }
+
 
     .action-button {
+
       display: inline-block;
+
       padding: 10px 14px;
+
       border-radius: 8px;
+
       text-decoration: none;
+
       font-weight: bold;
+
       background: #f3f4f6;
+
       color: #111827;
-      border: 1px solid #d1d5db;
+
+      border:
+        1px solid #d1d5db;
+
       transition: 0.2s;
+
     }
+
 
     .action-button.primary {
+
       background: #111827;
+
       color: white;
+
       border-color: #111827;
+
     }
 
+
     .action-button:hover {
+
       opacity: 0.88;
+
+      transform:
+        translateY(-1px);
+
     }
+
+
   </style>
 </head>
 
+
 <body>
+
 
 <div class="container">
 
-  <h1>Power System Analysis</h1>
+
+  <h1>
+    Power System Analysis
+  </h1>
+
 
   <div class="subtitle">
-    Välj kapitel
+    Välj kapitel och studera teori eller gör quiz
   </div>
 
+
+
+  <!-- KAPITEL 4–5 -->
+
   <div class="quiz-card">
+
 
     <div class="quiz-title">
       Kapitel 4–5 – Transmission Lines
     </div>
 
+
     <div class="quiz-description">
-      Transmission-line parameters, transposition, bundling,
-      ABCD, line models, SIL, voltage regulation och compensation.
+
+      Transmission-line parameters, conductor transposition,
+      bundling, ABCD, line models, SIL,
+      voltage regulation och compensation.
+
     </div>
+
 
     <div class="quiz-actions">
 
-      <a class="action-button"
-         href="chapter_4_5/theory.html">
+
+      <a
+        class="action-button"
+        href="chapter_4_5/theory.html">
+
         Läs teori
+
       </a>
 
-      <a class="action-button primary"
-         href="chapter_4_5/">
+
+      <a
+        class="action-button primary"
+        href="chapter_4_5/">
+
         Gör quiz
+
       </a>
+
 
     </div>
+
 
   </div>
 
 
-  <a class="quiz-link" href="chapter_8/">
+
+  <!-- KAPITEL 8 -->
+
+  <div class="quiz-card">
+
 
     <div class="quiz-title">
       Kapitel 8 – Symmetrical Faults
     </div>
 
+
     <div class="quiz-description">
-      R-L transients, generators, Thevenin, Zbus och circuit breakers.
+
+      R-L short-circuit transients, DC offset,
+      synchronous generators, Thevenin,
+      Zbus, fault currents och circuit breakers.
+
     </div>
 
-  </a>
+
+    <div class="quiz-actions">
+
+
+      <a
+        class="action-button"
+        href="chapter_8/theory.html">
+
+        Läs teori
+
+      </a>
+
+
+      <a
+        class="action-button primary"
+        href="chapter_8/">
+
+        Gör quiz
+
+      </a>
+
+
+    </div>
+
+
+  </div>
+
 
 </div>
+
 
 </body>
 </html>
