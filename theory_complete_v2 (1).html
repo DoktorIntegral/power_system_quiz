@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Kapitel 8 – Symmetrical Faults Theory</title>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']]
+  }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+:root{
+  --bg:#f4f7fb; --card:#fff; --text:#182230; --muted:#667085; --border:#dbe3ee;
+  --primary:#244f7f; --primary-dark:#183757; --primary-soft:#edf4fb;
+  --formula:#f7fbff; --formula-border:#bfd2e7;
+  --green:#edf8f2; --green-border:#3f8b68;
+  --orange:#fff7e8; --orange-border:#d99122;
+  --red:#fff1f1; --red-border:#c95555;
+  --shadow:0 8px 24px rgba(23,43,77,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(244,247,251,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.topbar-inner{max-width:1120px;margin:auto;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-weight:800;color:var(--primary-dark)}
+.buttons{display:flex;gap:8px;flex-wrap:wrap}
+.button{display:inline-block;text-decoration:none;padding:9px 14px;border-radius:9px;border:1px solid var(--border);background:white;color:var(--text);font-weight:700}
+.button.primary{background:var(--primary);border-color:var(--primary);color:white}
+.hero{max-width:1120px;margin:auto;padding:54px 20px 30px}
+.chapter{display:inline-block;background:var(--primary-soft);color:var(--primary);padding:6px 10px;border-radius:999px;font-weight:800;font-size:13px;margin-bottom:12px}
+h1{font-size:clamp(2.2rem,5vw,4rem);line-height:1.05;letter-spacing:-.035em;margin:0 0 14px}
+.subtitle{max-width:900px;color:var(--muted);font-size:1.05rem}
+.page{max-width:1120px;margin:auto;padding:0 20px 60px;display:grid;grid-template-columns:250px minmax(0,1fr);gap:22px}
+.sidebar{position:sticky;top:76px;align-self:start;background:white;border:1px solid var(--border);border-radius:14px;padding:15px;box-shadow:var(--shadow);max-height:calc(100vh - 92px);overflow:auto}
+.sidebar strong{display:block;margin-bottom:8px}
+.sidebar a{display:block;text-decoration:none;color:#344054;padding:7px 8px;border-radius:7px;font-size:14px}
+.sidebar a:hover{background:var(--primary-soft);color:var(--primary)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card h2{margin-top:0;color:var(--primary-dark)}
+.card h3{margin-top:24px;color:#27415f}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}
+.grid-box{background:#fbfcfe;border:1px solid var(--border);padding:14px;border-radius:10px}
+.grid-box strong{display:block;color:var(--primary-dark);margin-bottom:4px}
+.formula{position:relative;background:var(--formula);border:1px solid var(--formula-border);border-left:4px solid var(--primary);border-radius:10px;padding:22px 16px 15px;margin:14px 0;overflow-x:auto;text-align:center}
+.eqno{position:absolute;top:5px;right:9px;font-size:11px;font-weight:700;color:#6b7d92;background:#eaf2fa;padding:2px 6px;border-radius:999px}
+.note{background:var(--primary-soft);border-left:4px solid var(--primary);padding:13px 15px;border-radius:0 9px 9px 0;margin:14px 0}
+.note.good{background:var(--green);border-left-color:var(--green-border)}
+.note.warning{background:var(--orange);border-left-color:var(--orange-border)}
+.note.danger{background:var(--red);border-left-color:var(--red-border)}
+details{border:1px solid var(--border);border-radius:10px;margin:10px 0;overflow:hidden;background:white}
+summary{cursor:pointer;padding:13px 15px;font-weight:800;background:#fafcff}
+.details-content{padding:5px 15px 15px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin-top:15px;font-size:.95rem}
+th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{background:#f8fafc;color:#344054}
+tr:last-child td{border-bottom:none}
+.check{display:block;margin-top:16px;padding:10px 12px;background:#fafcff;border:1px solid var(--border);border-radius:9px}
+.progress-container{margin-top:20px}
+.progress-track{height:9px;background:#e5e7eb;border-radius:20px;overflow:hidden}
+.progress{height:100%;width:0%;background:linear-gradient(90deg,var(--primary),#4f79a8);transition:.3s}
+.progress-text{margin-top:6px;color:var(--muted);font-size:14px}
+.small{font-size:.9rem;color:var(--muted)}
+
+.trap-list{display:grid;gap:10px;margin-top:14px}
+.trap-item{background:#fbfcfe;border:1px solid var(--border);border-left:4px solid var(--orange-border);border-radius:10px;padding:13px 15px}
+.trap-title{font-weight:800;color:var(--primary-dark);margin-bottom:3px}
+.trap-text{color:#475467}
+
+@media(max-width:840px){.page{grid-template-columns:1fr}.sidebar{position:static;max-height:none}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">Power System Analysis</div>
+    <div class="buttons">
+      <a class="button" href="../">Startsida</a>
+      <a class="button primary" href="index.html">Gör quizet</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="chapter">Kapitel 8</div>
+  <h1>Symmetrical Faults</h1>
+  <p class="subtitle">
+    Fördjupad teorisammanfattning baserad på kursboken, Kapitel 8-föreläsningen
+    och Tutorial 4: R–L short-circuit transients, asymmetry factor, synchronous-machine
+    short-circuit currents, positive-sequence networks, per-unit, Thevenin, superposition,
+    \(Z_{bus}\), source contributions samt circuit breakers och fuses.
+  </p>
+</section>
+
+<div class="page">
+
+<nav class="sidebar">
+  <strong>Innehåll</strong>
+  <a href="#important">Viktigast att kunna</a>
+  <a href="#why">Fault analysis & effects</a>
+  <a href="#terms">Begrepp</a>
+  <a href="#rl">8.1 R–L transient</a>
+  <a href="#table81">Tabell 8.1</a>
+  <a href="#asymmetry">8.1.11–8.1.12</a>
+  <a href="#generator">8.2 Generator fault</a>
+  <a href="#table82">Tabell 8.2</a>
+  <a href="#externalx">Generator + external X</a>
+  <a href="#model">Network fault model</a>
+  <a href="#positive">Positive sequence</a>
+  <a href="#perunit">Per-unit workflow</a>
+  <a href="#thevenin">Thevenin</a>
+  <a href="#superposition">Superposition</a>
+  <a href="#prefault">Prefault current</a>
+  <a href="#zbus">Ybus & Zbus</a>
+  <a href="#contributions">Source contributions</a>
+  <a href="#breaker">Breaker & fuse</a>
+  <a href="#workflow">Exam workflow</a>
+  <a href="#formulas">Formelsamling</a>
+  <a href="#traps">Fallgropar</a>
+</nav>
+
+<main>
+
+<section class="card" id="important">
+  <h2>Viktigast att kunna</h2>
+  <div class="grid">
+    <div class="grid-box"><strong>R–L transient</strong>\(i=i_{ac}+i_{dc}\), \(T=L/R\), fault inception angle.</div>
+    <div class="grid-box"><strong>Asymmetry factor</strong>Eq. 8.1.11–8.1.12 och tid i cycles.</div>
+    <div class="grid-box"><strong>Generator current</strong>Eq. 8.2.1–8.2.5 och \(X_d'',X_d',X_d\).</div>
+    <div class="grid-box"><strong>Table 8.1 & 8.2</strong>Skillnaden mellan instantaneous, RMS, AC, DC och total current.</div>
+    <div class="grid-box"><strong>Positive sequence</strong>Balanced 3-phase fault analyseras med positive-sequence network.</div>
+    <div class="grid-box"><strong>Per-unit</strong>Common MVA base, voltage zones och \(\Omega\rightarrow pu\).</div>
+    <div class="grid-box"><strong>Thevenin</strong>\(Z_{Th}\) måste vara seen from fault point.</div>
+    <div class="grid-box"><strong>Superposition</strong>Prefault + fault component.</div>
+    <div class="grid-box"><strong>\(Z_{bus}\)</strong>\(Z_{nn}\) = driving-point impedance.</div>
+    <div class="grid-box"><strong>Contributions</strong>Total fault current ≠ current i varje branch/breaker.</div>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-track"><div class="progress" id="progress"></div></div>
+    <div class="progress-text" id="progressText">0 delar markerade som lästa</div>
+  </div>
+</section>
+
+
+<section class="card" id="why">
+  <h2>Fault analysis och fysiska effekter</h2>
+  <p>
+    Fault analysis bestämmer de currents som uppstår vid faults så att equipment och protection
+    kan dimensioneras. Höga fault currents ger thermal stress och stora magnetic forces.
+  </p>
+  <ul>
+    <li>maximum fault current → equipment withstand</li>
+    <li>breaker current → interrupting requirement</li>
+    <li>faulted bus voltage sjunker kraftigt</li>
+    <li>fault kan ge arcing, heating och mechanical stress</li>
+  </ul>
+  <p>
+    Föreläsningen betonar också generatorns dynamiska konsekvens: under ett severe fault kan
+    electrical real power minska medan mechanical input torque kvarstår, så generatorn accelererar.
+    Faultet måste därför clearas tillräckligt snabbt.
+  </p>
+  <div class="note danger">Fault clearing handlar alltså både om att begränsa skador och att skydda systemets stability.</div>
+  <label class="check"><input type="checkbox" data-progress> Jag förstår syftet och de fysiska konsekvenserna</label>
+</section>
+
+
+<section class="card" id="terms">
+  <h2>Begrepp som är lätta att blanda ihop</h2>
+  <p><strong>Symmetrical fault:</strong> balanced three-phase fault.</p>
+  <p><strong>Symmetrical current:</strong> sinusformad AC component i R–L short-circuit current.</p>
+  <p><strong>Asymmetrical total current:</strong> AC component + DC offset.</p>
+  <div class="note warning"><strong>Symmetrical fault ≠ symmetrical current.</strong> Det ena beskriver fault type, det andra waveform component.</div>
+  <p>I Chapter 8 behandlas balanced three-phase faults; unsymmetrical faults kommer senare.</p>
+  <label class="check"><input type="checkbox" data-progress> Jag kan skilja fault type från waveform component</label>
+</section>
+
+
+<section class="card" id="rl">
+  <h2>8.1 – Series R–L circuit transient</h2>
+
+  <p>För en bolted short circuit i en series R–L circuit:</p>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.1.1</span>
+    \[
+      L\frac{di(t)}{dt}+Ri(t)=\sqrt{2}V\sin(\omega t+\alpha)
+    \]
+  </div>
+
+  <p>Lösningen delas i AC och DC:</p>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.1.2</span>
+    \[
+      i(t)=
+      \frac{\sqrt{2}V}{Z}
+      \left[
+        \sin(\omega t+\alpha-\theta)
+        -
+        \sin(\alpha-\theta)e^{-t/T}
+      \right]
+    \]
+  </div>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.1.3</span>
+    \[
+      i_{\mathrm{ac}}(t)
+      =
+      \frac{\sqrt{2}V}{Z}
+      \sin(\omega t+\alpha-\theta)
+    \]
+  </div>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.1.4</span>
+    \[
+      i_{\mathrm{dc}}(t)
+      =
+      -\frac{\sqrt{2}V}{Z}
+      \sin(\alpha-\theta)e^{-t/T}
+    \]
+  </div>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.1.5–8.1.7</span>
+    \[
+      Z=\sqrt{R^2+X^2},
+      \qquad
+      \theta=\tan^{-1}\!\left(\frac{X}{R}\right),
+      \qquad
+      T=\frac{L}{R}=\frac{X}{\omega R}
+    \]
+  </div>
+
+  <h3>Maximum DC offset</h3>
+  <p>
+    Maximum offset fås för en särskild fault inception angle. Med bokens val av reference:
+  </p>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.1.8</span>
+    \[
+      i(t)
+      =
+      \sqrt{2}I_{\mathrm{ac}}
+      \left[
+        \sin\!\left(\omega t-\frac{\pi}{2}\right)
+        +e^{-t/T}
+      \right]
+    \]
+  </div>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.1.9</span>
+    \[
+      I_{\mathrm{ac}}=\frac{V}{Z}
+    \]
+  </div>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.1.10</span>
+    \[
+      I_{\mathrm{rms}}(t)
+      =
+      \sqrt{
+        I_{\mathrm{ac}}^2+
+        \left(\sqrt{2}I_{\mathrm{ac}}e^{-t/T}\right)^2
+      }
+      =
+      I_{\mathrm{ac}}\sqrt{1+2e^{-2t/T}}
+    \]
+  </div>
+
+  <div class="note">
+    Ju större \(X/R\), desto större \(T\) och desto långsammare dör DC offset ut.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan Section 8.1 och Eq. 8.1.1–8.1.10</label>
+</section>
+
+
+<section class="card" id="table81">
+  <h2>Tabell 8.1 – R–L short-circuit current</h2>
+  <p>Det här är en kompakt study-version av relationerna som Table 8.1 sammanfattar.</p>
+
+  <div class="table-wrap">
+  <table>
+    <tr>
+      <th>Component</th>
+      <th>Instantaneous</th>
+      <th>RMS / magnitude</th>
+    </tr>
+    <tr>
+      <td>Symmetrical AC</td>
+      <td>\(\displaystyle i_{ac}(t)=\sqrt{2}\frac{V}{Z}\sin(\omega t+\alpha-\theta)\)</td>
+      <td>\(\displaystyle I_{ac}=\frac{V}{Z}\)</td>
+    </tr>
+    <tr>
+      <td>DC offset</td>
+      <td>\(\displaystyle i_{dc}(t)=-\sqrt{2}\frac{V}{Z}\sin(\alpha-\theta)e^{-t/T}\)</td>
+      <td>Decay bestäms av \(T=L/R\)</td>
+    </tr>
+    <tr>
+      <td>Total asymmetrical</td>
+      <td>\(\displaystyle i(t)=i_{ac}(t)+i_{dc}(t)\)</td>
+      <td>\(\displaystyle I_{rms}(t)\approx\sqrt{I_{ac}^2+i_{dc}^2(t)}\)</td>
+    </tr>
+    <tr>
+      <td>Maximum DC offset</td>
+      <td>\(\displaystyle |i_{dc,max}(t)|=\sqrt{2}I_{ac}e^{-t/T}\)</td>
+      <td>\(\displaystyle I_{rms}(t)=K(\tau)I_{ac}\)</td>
+    </tr>
+  </table>
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan läsa Table 8.1 som AC + DC + total current</label>
+</section>
+
+
+<section class="card" id="asymmetry">
+  <h2>Eq. 8.1.11–8.1.12 – Asymmetry factor</h2>
+
+  <p>
+    De här formlerna är särskilt viktiga eftersom Tutorial 4:s första problem använder
+    RMS asymmetrical current vid olika antal cycles.
+  </p>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.1.11</span>
+    \[
+      I_{\mathrm{rms}}(\tau)=K(\tau)I_{\mathrm{ac}}
+    \]
+  </div>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.1.12</span>
+    \[
+      K(\tau)
+      =
+      \sqrt{
+        1+
+        2e^{-\frac{4\pi\tau}{X/R}}
+      }
+    \]
+  </div>
+
+  <div class="note warning">
+    Här är \(\tau\) <strong>tid i cycles</strong>, inte tid i sekunder.
+    Sambandet fås från \(t=\tau/f\) tillsammans med
+    \(T=X/(2\pi fR)\).
+  </div>
+
+  <p>Vid fault inception:</p>
+  <div class="formula">\[
+    K(0)=\sqrt{3}
+    \qquad\Rightarrow\qquad
+    I_{\mathrm{rms}}(0)=\sqrt{3}\,I_{\mathrm{ac}}
+  \]</div>
+
+  <p>När tiden blir stor:</p>
+  <div class="formula">\[
+    K(\tau)\rightarrow 1
+    \qquad\Rightarrow\qquad
+    I_{\mathrm{rms}}\rightarrow I_{\mathrm{ac}}
+  \]</div>
+
+  <h3>Momentary vs interrupting current</h3>
+  <p>
+    Samma \(K(\tau)\)-idé används för att uppskatta asymmetrical RMS current vid en
+    viss tid efter fault inception:
+  </p>
+
+  <div class="formula">\[
+    I_{\mathrm{momentary}}=K(\tau_m)I_{ac}
+  \]</div>
+
+  <div class="formula">\[
+    I_{\mathrm{interrupting}}=K(\tau_{\mathrm{open}})I_{ac}
+  \]</div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan använda \(K(\tau)\) och skilja cycles från seconds</label>
+</section>
+
+
+<section class="card" id="generator">
+  <h2>8.2 – Three-phase short circuit on an unloaded synchronous machine</h2>
+
+  <p>
+    Generatorns AC fault current är time-varying. Boken delar upp den i
+    subtransient, transient och steady-state contributions.
+  </p>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.2.1</span>
+    \[
+    \begin{aligned}
+    i_{\mathrm{ac}}(t)
+    =&\sqrt{2}E_g
+    \Bigg[
+      \left(\frac{1}{X_d''}-\frac{1}{X_d'}\right)e^{-t/T_d''}
+      \\
+      &+
+      \left(\frac{1}{X_d'}-\frac{1}{X_d}\right)e^{-t/T_d'}
+      +
+      \frac{1}{X_d}
+    \Bigg]
+    \sin\!\left(\omega t+\alpha-\frac{\pi}{2}\right)
+    \end{aligned}
+    \]
+  </div>
+
+  <p>RMS-envelope för AC componenten:</p>
+
+  <div class="formula">\[
+    I_{\mathrm{ac}}(t)
+    =
+    E_g
+    \left[
+      \left(\frac{1}{X_d''}-\frac{1}{X_d'}\right)e^{-t/T_d''}
+      +
+      \left(\frac{1}{X_d'}-\frac{1}{X_d}\right)e^{-t/T_d'}
+      +
+      \frac{1}{X_d}
+    \right]
+  \]</div>
+
+  <h3>Tre characteristic currents</h3>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.2.2</span>
+    \[
+      I''=I_{\mathrm{ac}}(0)=\frac{E_g}{X_d''}
+    \]
+  </div>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.2.3</span>
+    \[
+      I'=\frac{E_g}{X_d'}
+    \]
+  </div>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.2.4</span>
+    \[
+      I=\frac{E_g}{X_d}
+    \]
+  </div>
+
+  <div class="formula">\[
+    X_d''<X_d'<X_d
+    \qquad\Longrightarrow\qquad
+    I''>I'>I
+  \]</div>
+
+  <h3>Generator DC offset</h3>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.2.5</span>
+    \[
+      i_{\mathrm{dc,max}}(t)
+      =
+      \sqrt{2}\frac{E_g}{X_d''}e^{-t/T_A}
+      =
+      \sqrt{2}I''e^{-t/T_A}
+    \]
+  </div>
+
+  <div class="note good">
+    Ja: Eq. 8.2.2 finns nu explicit med nummer. Den fanns implicit i den tidigare sidan som
+    \(I''=E_g/X_d''\), men inte tydligt kopplad till 8.2.2.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan Eq. 8.2.1–8.2.5</label>
+</section>
+
+
+<section class="card" id="table82">
+  <h2>Tabell 8.2 – Synchronous-machine short-circuit current</h2>
+
+  <div class="table-wrap">
+  <table>
+    <tr>
+      <th>Component</th>
+      <th>Relation</th>
+      <th>Hur den ska tolkas</th>
+    </tr>
+    <tr>
+      <td>AC symmetrical</td>
+      <td>\(I_{ac}(t)\) från Eq. 8.2.1</td>
+      <td>RMS AC envelope minskar med tiden</td>
+    </tr>
+    <tr>
+      <td>Subtransient</td>
+      <td>\(\displaystyle I''=\frac{E_g}{X_d''}\)</td>
+      <td>Initial AC fault current</td>
+    </tr>
+    <tr>
+      <td>Transient</td>
+      <td>\(\displaystyle I'=\frac{E_g}{X_d'}\)</td>
+      <td>Efter subtransient component har decayed</td>
+    </tr>
+    <tr>
+      <td>Steady state</td>
+      <td>\(\displaystyle I=\frac{E_g}{X_d}\)</td>
+      <td>Long-time AC value</td>
+    </tr>
+    <tr>
+      <td>Maximum DC offset</td>
+      <td>\(\displaystyle i_{dc,max}(t)=\sqrt{2}I''e^{-t/T_A}\)</td>
+      <td>Armature transient</td>
+    </tr>
+    <tr>
+      <td>Total instantaneous</td>
+      <td>\(\displaystyle i(t)=i_{ac}(t)+i_{dc}(t)\)</td>
+      <td>Actual asymmetrical waveform</td>
+    </tr>
+    <tr>
+      <td>Total RMS</td>
+      <td>\(\displaystyle I_{rms}(t)\approx\sqrt{I_{ac}^2(t)+i_{dc}^2(t)}\)</td>
+      <td>Used for breaker duty approximation</td>
+    </tr>
+  </table>
+  </div>
+
+  <p>För maximum DC offset:</p>
+  <div class="formula">\[
+    I_{\mathrm{rms}}(t)
+    =
+    \sqrt{
+      I_{\mathrm{ac}}^2(t)
+      +
+      \left[
+        \sqrt{2}I''e^{-t/T_A}
+      \right]^2
+    }
+  \]</div>
+
+  <div class="note warning">
+    Här är en viktig skillnad mot Section 8.1:
+    generatorns \(I_{ac}(t)\) är själv time-varying, så man ska inte alltid behandla AC magnitude
+    som konstant när man beräknar breaker current några cycles efter fault inception.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan Table 8.2 och total RMS generator fault current</label>
+</section>
+
+
+<section class="card" id="externalx">
+  <h2>Generator + transformer / external series reactance</h2>
+  <p>
+    Tutorial 4 Problem 8.6 har ett generator fault där current till faultet även passerar
+    transformer reactance. Då är den initiala branch reactance inte bara \(X_d''\).
+  </p>
+
+  <div class="formula">\[
+    I''=
+    \frac{E_g}{X_d''+X_e}
+  \]</div>
+
+  <p>
+    Om external reactance \(X_e\) antas constant och dess effekt på machine time constants
+    försummas kan AC-envelope skrivas:
+  </p>
+
+  <div class="formula">\[
+  \begin{aligned}
+  I_{\mathrm{ac}}(t)=E_g\Bigg[
+  &
+  \left(
+    \frac{1}{X_d''+X_e}
+    -
+    \frac{1}{X_d'+X_e}
+  \right)e^{-t/T_d''}
+  \\
+  &+
+  \left(
+    \frac{1}{X_d'+X_e}
+    -
+    \frac{1}{X_d+X_e}
+  \right)e^{-t/T_d'}
+  +
+  \frac{1}{X_d+X_e}
+  \Bigg].
+  \end{aligned}
+  \]</div>
+
+  <p>För Tutorial 4 Problem 8.6 är \(X_e\) transformer series reactance.</p>
+
+  <div class="note warning">
+    Läs alltid fault location: om transformer/line ligger mellan generator och fault måste dess reactance
+    tas med i current path.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan hantera generator + external reactance</label>
+</section>
+
+
+<section class="card" id="model">
+  <h2>Power-system three-phase short-circuit model</h2>
+
+  <div class="table-wrap">
+  <table>
+    <tr><th>Component</th><th>Chapter 8 model</th></tr>
+    <tr><td>Transmission line</td><td>Equivalent series reactance</td></tr>
+    <tr><td>Transformer</td><td>Leakage reactance</td></tr>
+    <tr><td>Synchronous machine</td><td>Constant voltage source behind \(X_d''\)</td></tr>
+    <tr><td>Induction motor</td><td>Neglect or represent similarly to synchronous machine in simplified treatment</td></tr>
+    <tr><td>Nonrotating impedance load</td><td>Neglected</td></tr>
+  </table>
+  </div>
+
+  <p>Course assumptions also neglect line/transformer resistances, shunt admittances and often prefault load currents.</p>
+  <div class="note warning">These are analysis simplifications, not statements that resistance and loads are always negligible in real systems.</div>
+  <label class="check"><input type="checkbox" data-progress> Jag känner till Chapter 8 modelling assumptions</label>
+</section>
+
+
+<section class="card" id="positive">
+  <h2>Positive-sequence network</h2>
+  <p>
+    Ett balanced three-phase fault innehåller endast positive-sequence quantities.
+    Därför analyseras faultet med ett single-phase positive-sequence equivalent.
+  </p>
+  <div class="note good">Balanced 3φ fault → positive-sequence network.</div>
+  <p>
+    Sequence choice och reactance approximations är två olika saker:
+    positive sequence bestämmer vilket sequence network som behövs;
+    Chapter 8 assumptions bestämmer hur components modelleras.
+  </p>
+  <p>Ground-symbolen i reactance diagram är circuit reference node, inte automatiskt en physical earth-current path.</p>
+  <label class="check"><input type="checkbox" data-progress> Jag förstår positive-sequence modellen</label>
+</section>
+
+
+<section class="card" id="perunit">
+  <h2>Per-unit workflow – extra viktigt från Tutorial 4</h2>
+
+  <div class="formula">\[
+    I_{\mathrm{base}}
+    =
+    \frac{S_{\mathrm{base}}}{\sqrt{3}V_{LL,\mathrm{base}}}
+  \]</div>
+
+  <div class="formula">\[
+    Z_{\mathrm{base}}
+    =
+    \frac{V_{LL,\mathrm{base}}^2}{S_{\mathrm{base}}}
+  \]</div>
+
+  <div class="formula">\[
+    Z_{\mathrm{pu,new}}
+    =
+    Z_{\mathrm{pu,old}}
+    \left(\frac{S_{\mathrm{base,new}}}{S_{\mathrm{base,old}}}\right)
+    \left(\frac{V_{\mathrm{base,old}}}{V_{\mathrm{base,new}}}\right)^2
+  \]</div>
+
+  <h3>Ohm → per unit</h3>
+
+  <div class="formula">\[
+    X_{\mathrm{pu}}
+    =
+    \frac{X_{\Omega}}{Z_{\mathrm{base}}}
+  \]</div>
+
+  <h3>Voltage bases through transformers</h3>
+  <p>
+    Välj en voltage base i en zone. Övriga voltage bases följer transformer rated ratios.
+  </p>
+
+  <h3>Prefault voltage in per unit</h3>
+  <div class="formula">\[
+    V_{F,\mathrm{pu}}
+    =
+    \frac{V_{F,\mathrm{actual}}}{V_{\mathrm{base}}}
+  \]</div>
+
+  <div class="note">
+    Tutorial 4 Problem 8.12 tränar exakt detta: common MVA base → voltage bases per zone →
+    convert machine/transformer reactances → convert line \(\Omega\) to pu → draw reactance diagram.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan hela per-unit workflow för fault problems</label>
+</section>
+
+
+<section class="card" id="thevenin">
+  <h2>Thevenin equivalent at the fault</h2>
+
+  <div class="formula">\[
+    I_F''=\frac{V_F}{Z_{Th}}
+  \]</div>
+
+  <p>
+    \(Z_{Th}\) är impedance seen from fault terminals när independent machine voltage sources
+    har satts till zero. Voltage source short-circuitas, men machine reactance ligger kvar.
+  </p>
+
+  <div class="note warning">
+    Du får börja reducera network var du vill. Men den slutliga equivalent impedance måste vara
+    sedd från själva fault point.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag förstår Thevenin seen from fault</label>
+</section>
+
+
+<section class="card" id="superposition">
+  <h2>Superposition method</h2>
+
+  <p>Chapter 8 delar fault calculation i två circuits:</p>
+  <ul>
+    <li>prefault circuit</li>
+    <li>fault component circuit</li>
+  </ul>
+
+  <div class="formula">\[
+    \text{Total quantity}
+    =
+    \text{Prefault quantity}
+    +
+    \text{Fault component}
+  \]</div>
+
+  <p>
+    I fault component circuit short-circuitas machine voltage sources och prefault voltage vid
+    fault location används som den driving source som skapar fault component.
+  </p>
+
+  <div class="note good">För många synchronous machines blir detta enklare än att lösa alla internal voltage sources direkt.</div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag förstår superposition</label>
+</section>
+
+
+<section class="card" id="prefault">
+  <h2>När prefault load current inte försummas</h2>
+
+  <p>
+    Boken visar att total machine contributions kan fås genom att lägga tillbaka prefault current
+    efter att fault componenten har beräknats.
+  </p>
+
+  <div class="formula">\[
+    I_g''=I_{g1}''+I_L
+  \]</div>
+
+  <div class="formula">\[
+    I_m''=I_{m1}''-I_L
+  \]</div>
+
+  <p>
+    Alternativt kan man först beräkna machine internal voltages från prefault operating condition
+    och därefter lösa det faulted network direkt.
+  </p>
+
+  <div class="formula">\[
+    S=VI^*
+    \qquad\Rightarrow\qquad
+    I=\left(\frac{S}{V}\right)^*
+  \]</div>
+
+  <div class="note warning">
+    Många Chapter 8 exercises säger uttryckligen “prefault load current is neglected”.
+    Då ska du inte lägga till \(I_L\).
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag vet när prefault current ska tas med</label>
+</section>
+
+
+<section class="card" id="zbus">
+  <h2>Bus Impedance Matrix</h2>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.4.1</span>
+    \[
+      \mathbf{Y}_{bus}\mathbf{E}^{(1)}=\mathbf{I}^{(1)}
+    \]
+  </div>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.4.2</span>
+    \[
+      \mathbf{Z}_{bus}\mathbf{I}^{(1)}=\mathbf{E}^{(1)}
+    \]
+  </div>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.4.3</span>
+    \[
+      \mathbf{Z}_{bus}=\mathbf{Y}_{bus}^{-1}
+    \]
+  </div>
+
+  <p>
+    Diagonal \(Z_{nn}\): self / driving-point impedance.
+    Off-diagonal \(Z_{kn}\): mutual / transfer impedance.
+  </p>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.4.5</span>
+    \[
+      I_{Fn}''=\frac{V_F}{Z_{nn}}
+    \]
+  </div>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.4.6</span>
+    \[
+      E_k^{(1)}
+      =
+      -\frac{Z_{kn}}{Z_{nn}}V_F
+    \]
+  </div>
+
+  <div class="formula">
+    <span class="eqno">Eq. 8.4.7</span>
+    \[
+      E_k
+      =
+      V_F
+      \left(
+        1-\frac{Z_{kn}}{Z_{nn}}
+      \right)
+    \]
+  </div>
+
+  <div class="note">
+    Om network impedance till generators minskar, till exempel genom fler parallel paths,
+    ökar fault current eftersom driving-point impedance \(Z_{nn}\) minskar.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan Eq. 8.4.1–8.4.7 som används i fault analysis</label>
+</section>
+
+
+<section class="card" id="contributions">
+  <h2>Source contributions, branch current och current division</h2>
+
+  <p>
+    Total Thevenin fault current måste ofta delas upp i contributions från olika generators,
+    motors, transformers och lines.
+  </p>
+
+  <p>För två parallel paths med reactances \(X_1\) och \(X_2\):</p>
+
+  <div class="formula">\[
+    I_1
+    =
+    I_F
+    \frac{X_2}{X_1+X_2},
+    \qquad
+    I_2
+    =
+    I_F
+    \frac{X_1}{X_1+X_2}
+  \]</div>
+
+  <p>
+    Tutorial 4 Problem 8.12 använder denna typ av reasoning efter att \(Z_{Th}\) och total
+    fault current har bestämts.
+  </p>
+
+  <div class="note warning">
+    Current genom en breaker är summan av de source contributions vars current paths faktiskt
+    passerar breakern. Den är inte automatiskt lika med total \(I_F''\).
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan beräkna source/branch contributions</label>
+</section>
+
+
+<section class="card" id="breaker">
+  <h2>Circuit breakers och fuses</h2>
+
+  <h3>Protection chain</h3>
+  <div class="formula">\[
+    \text{Fault}
+    \rightarrow
+    \text{Relay detection}
+    \rightarrow
+    \text{Trip signal}
+    \rightarrow
+    \text{Breaker opens}
+  \]</div>
+
+  <div class="table-wrap">
+  <table>
+    <tr><th>Breaker rating</th><th>Betydelse</th></tr>
+    <tr><td>Rated maximum voltage</td><td>Maximum rms line-to-line operating voltage</td></tr>
+    <tr><td>Rated continuous current</td><td>Current som kan bäras kontinuerligt utan overheating</td></tr>
+    <tr><td>Rated short-circuit current</td><td>Maximum rms symmetrical current som kan interruptas vid rated voltage</td></tr>
+    <tr><td>Rated short-time current</td><td>Fault current som kan bäras under specified short time</td></tr>
+    <tr><td>Interrupting time</td><td>Från trip coil energization tills alla three phases är cleared</td></tr>
+  </table>
+  </div>
+
+  <p>
+    Faster breaker opening innebär att mindre tid har gått för DC offset att decay.
+    Därför kopplas breaker duty till \(X/R\), time constants och asymmetrical current.
+  </p>
+
+  <h3>Fuses</h3>
+  <p>Viktiga fuse quantities:</p>
+  <ul>
+    <li>voltage rating</li>
+    <li>continuous current rating</li>
+    <li>interrupting current rating</li>
+    <li>time-current response</li>
+  </ul>
+
+  <label class="check"><input type="checkbox" data-progress> Jag förstår breaker/fuse selection på Chapter 8-nivå</label>
+</section>
+
+
+<section class="card" id="workflow">
+  <h2>Arbetsgång för Chapter 8-problem</h2>
+
+  <h3>A. R–L transient</h3>
+  <ol>
+    <li>Beräkna \(X=\omega L\), \(Z=\sqrt{R^2+X^2}\), \(\theta\) och \(T=L/R\).</li>
+    <li>Beräkna \(I_{ac}=V/Z\).</li>
+    <li>Om maximum DC offset: använd Eq. 8.1.10 eller \(K(\tau)\).</li>
+    <li>Om tid anges i cycles: använd Eq. 8.1.11–8.1.12.</li>
+  </ol>
+
+  <h3>B. Generator + breaker</h3>
+  <ol>
+    <li>Identifiera total reactance mellan internal EMF och fault.</li>
+    <li>Beräkna initial \(I''\).</li>
+    <li>Om breaker öppnar efter några cycles: beräkna \(I_{ac}(t)\), DC offset och därefter total RMS.</li>
+  </ol>
+
+  <h3>C. Multi-bus fault</h3>
+  <ol>
+    <li>Välj common MVA base.</li>
+    <li>Bestäm voltage bases per transformer zone.</li>
+    <li>Convert alla reactances till common pu base.</li>
+    <li>Convert line \(\Omega\) med \(X_{pu}=X_\Omega/Z_{base}\).</li>
+    <li>Rita positive-sequence reactance diagram.</li>
+    <li>Bestäm \(Z_{Th}\) seen from fault eller använd \(Z_{nn}\).</li>
+    <li>Beräkna \(I_F''=V_F/Z_{Th}\).</li>
+    <li>Convert till kA med \(I_{base}\).</li>
+    <li>Beräkna source/branch contributions separat.</li>
+  </ol>
+</section>
+
+
+
+<section class="card" id="formulas">
+  <h2>Formelsamling – Kapitel 8</h2>
+
+  <p>
+    Här finns alla centrala formler från teorisidan samlade på ett ställe.
+    Använd den här delen som snabb repetition inför quiz och tenta.
+  </p>
+
+  <h3>8.1 – Series R–L short-circuit transient</h3>
+
+  <div class="formula"><span class="eqno">8.1.1</span>
+  \[
+    L\frac{di(t)}{dt}+Ri(t)=\sqrt{2}V\sin(\omega t+\alpha)
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.1.2</span>
+  \[
+    i(t)=
+    \frac{\sqrt{2}V}{Z}
+    \left[
+      \sin(\omega t+\alpha-\theta)
+      -
+      \sin(\alpha-\theta)e^{-t/T}
+    \right]
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.1.3</span>
+  \[
+    i_{\mathrm{ac}}(t)
+    =
+    \frac{\sqrt{2}V}{Z}
+    \sin(\omega t+\alpha-\theta)
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.1.4</span>
+  \[
+    i_{\mathrm{dc}}(t)
+    =
+    -\frac{\sqrt{2}V}{Z}
+    \sin(\alpha-\theta)e^{-t/T}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.1.5</span>
+  \[
+    Z=\sqrt{R^2+X^2}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.1.6</span>
+  \[
+    \theta=\tan^{-1}\!\left(\frac{X}{R}\right)
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.1.7</span>
+  \[
+    T=\frac{L}{R}
+    =
+    \frac{X}{\omega R}
+    =
+    \frac{X}{2\pi fR}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.1.8</span>
+  \[
+    i(t)=
+    \sqrt{2}I_{\mathrm{ac}}
+    \left[
+      \sin\!\left(\omega t-\frac{\pi}{2}\right)
+      +e^{-t/T}
+    \right]
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.1.9</span>
+  \[
+    I_{\mathrm{ac}}=\frac{V}{Z}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.1.10</span>
+  \[
+    I_{\mathrm{rms}}(t)
+    =
+    I_{\mathrm{ac}}\sqrt{1+2e^{-2t/T}}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.1.11</span>
+  \[
+    I_{\mathrm{rms}}(\tau)
+    =
+    K(\tau)I_{\mathrm{ac}}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.1.12</span>
+  \[
+    K(\tau)
+    =
+    \sqrt{1+2e^{-4\pi\tau/(X/R)}}
+  \]</div>
+
+  <div class="note warning">
+    I 8.1.11–8.1.12 är \(\tau\) tid i <strong>cycles</strong>.
+    I \(e^{-t/T}\) är \(t\) normalt tid i sekunder.
+  </div>
+
+  <h3>8.2 – Unloaded synchronous machine</h3>
+
+  <div class="formula"><span class="eqno">8.2.1</span>
+  \[
+  \begin{aligned}
+  i_{\mathrm{ac}}(t)
+  =&\sqrt{2}E_g
+  \Bigg[
+    \left(\frac{1}{X_d''}-\frac{1}{X_d'}\right)e^{-t/T_d''}
+    \\
+    &+
+    \left(\frac{1}{X_d'}-\frac{1}{X_d}\right)e^{-t/T_d'}
+    +
+    \frac{1}{X_d}
+  \Bigg]
+  \sin\!\left(\omega t+\alpha-\frac{\pi}{2}\right)
+  \end{aligned}
+  \]</div>
+
+  <div class="formula">
+  \[
+    I_{\mathrm{ac}}(t)
+    =
+    E_g
+    \left[
+      \left(\frac{1}{X_d''}-\frac{1}{X_d'}\right)e^{-t/T_d''}
+      +
+      \left(\frac{1}{X_d'}-\frac{1}{X_d}\right)e^{-t/T_d'}
+      +
+      \frac{1}{X_d}
+    \right]
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.2.2</span>
+  \[
+    I''=\frac{E_g}{X_d''}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.2.3</span>
+  \[
+    I'=\frac{E_g}{X_d'}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.2.4</span>
+  \[
+    I=\frac{E_g}{X_d}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.2.5</span>
+  \[
+    i_{\mathrm{dc,max}}(t)
+    =
+    \sqrt{2}I''e^{-t/T_A}
+  \]</div>
+
+  <div class="formula">
+  \[
+    I_{\mathrm{rms}}(t)
+    =
+    \sqrt{
+      I_{\mathrm{ac}}^2(t)
+      +
+      \left[\sqrt{2}I''e^{-t/T_A}\right]^2
+    }
+  \]</div>
+
+  <div class="formula">
+  \[
+    X_d''<X_d'<X_d
+    \qquad\Longrightarrow\qquad
+    I''>I'>I
+  \]</div>
+
+  <h3>Generator + external series reactance</h3>
+
+  <div class="formula">
+  \[
+    I''=\frac{E_g}{X_d''+X_e}
+  \]</div>
+
+  <div class="formula">
+  \[
+  \begin{aligned}
+  I_{\mathrm{ac}}(t)=E_g\Bigg[
+  &
+  \left(
+    \frac{1}{X_d''+X_e}
+    -
+    \frac{1}{X_d'+X_e}
+  \right)e^{-t/T_d''}
+  \\
+  &+
+  \left(
+    \frac{1}{X_d'+X_e}
+    -
+    \frac{1}{X_d+X_e}
+  \right)e^{-t/T_d'}
+  +
+  \frac{1}{X_d+X_e}
+  \Bigg]
+  \end{aligned}
+  \]</div>
+
+  <h3>Per-unit</h3>
+
+  <div class="formula">
+  \[
+    I_{\mathrm{base}}
+    =
+    \frac{S_{\mathrm{base}}}{\sqrt{3}V_{LL,\mathrm{base}}}
+  \]</div>
+
+  <div class="formula">
+  \[
+    Z_{\mathrm{base}}
+    =
+    \frac{V_{LL,\mathrm{base}}^2}{S_{\mathrm{base}}}
+  \]</div>
+
+  <div class="formula">
+  \[
+    Z_{\mathrm{pu,new}}
+    =
+    Z_{\mathrm{pu,old}}
+    \left(\frac{S_{\mathrm{base,new}}}{S_{\mathrm{base,old}}}\right)
+    \left(\frac{V_{\mathrm{base,old}}}{V_{\mathrm{base,new}}}\right)^2
+  \]</div>
+
+  <div class="formula">
+  \[
+    X_{\mathrm{pu}}
+    =
+    \frac{X_{\Omega}}{Z_{\mathrm{base}}}
+  \]</div>
+
+  <div class="formula">
+  \[
+    V_{F,\mathrm{pu}}
+    =
+    \frac{V_{F,\mathrm{actual}}}{V_{\mathrm{base}}}
+  \]</div>
+
+  <h3>Thevenin och fault current</h3>
+
+  <div class="formula">
+  \[
+    I_F''=\frac{V_F}{Z_{\mathrm{Th}}}
+  \]</div>
+
+  <h3>Prefault current</h3>
+
+  <div class="formula">
+  \[
+    S=VI^*
+    \qquad\Rightarrow\qquad
+    I=\left(\frac{S}{V}\right)^*
+  \]</div>
+
+  <div class="formula">
+  \[
+    I_g''=I_{g1}''+I_L
+  \]</div>
+
+  <div class="formula">
+  \[
+    I_m''=I_{m1}''-I_L
+  \]</div>
+
+  <h3>8.4 – Bus impedance matrix</h3>
+
+  <div class="formula"><span class="eqno">8.4.1</span>
+  \[
+    \mathbf{Y}_{bus}\mathbf{E}^{(1)}
+    =
+    \mathbf{I}^{(1)}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.4.2</span>
+  \[
+    \mathbf{Z}_{bus}\mathbf{I}^{(1)}
+    =
+    \mathbf{E}^{(1)}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.4.3</span>
+  \[
+    \mathbf{Z}_{bus}
+    =
+    \mathbf{Y}_{bus}^{-1}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.4.5</span>
+  \[
+    I_{Fn}''
+    =
+    \frac{V_F}{Z_{nn}}
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.4.6</span>
+  \[
+    E_k^{(1)}
+    =
+    -\frac{Z_{kn}}{Z_{nn}}V_F
+  \]</div>
+
+  <div class="formula"><span class="eqno">8.4.7</span>
+  \[
+    E_k
+    =
+    V_F\left(1-\frac{Z_{kn}}{Z_{nn}}\right)
+  \]</div>
+
+  <h3>Current division / source contributions</h3>
+
+  <div class="formula">
+  \[
+    I_1
+    =
+    I_F\frac{X_2}{X_1+X_2},
+    \qquad
+    I_2
+    =
+    I_F\frac{X_1}{X_1+X_2}
+  \]</div>
+
+  <h3>Momentary / interrupting current</h3>
+
+  <div class="formula">
+  \[
+    I_{\mathrm{momentary}}
+    =
+    K(\tau_m)I_{\mathrm{ac}}
+  \]</div>
+
+  <div class="formula">
+  \[
+    I_{\mathrm{interrupting}}
+    =
+    K(\tau_{\mathrm{open}})I_{\mathrm{ac}}
+  \]</div>
+</section>
+
+
+
+<section class="card" id="traps">
+  <h2>Vanliga fallgropar</h2>
+
+  <p>
+    Här är fallgroparna nu skrivna som korta kontrollfrågor.
+    Själva formlerna finns i formelsamlingen ovan.
+  </p>
+
+  <div class="trap-list">
+
+    <div class="trap-item">
+      <div class="trap-title">1. Blandar du ihop seconds och cycles?</div>
+      <div class="trap-text">
+        \(K(\tau)\) använder \(\tau\) i cycles. I \(e^{-t/T}\) används normalt tid i sekunder.
+      </div>
+    </div>
+
+    <div class="trap-item">
+      <div class="trap-title">2. Behandlar du generatorns AC-current som konstant?</div>
+      <div class="trap-text">
+        I R–L-modellen är \(I_{ac}\) konstant. För synchronous machine är \(I_{ac}(t)\) time-varying.
+      </div>
+    </div>
+
+    <div class="trap-item">
+      <div class="trap-title">3. Glömmer du transformer/line reactance mellan source och fault?</div>
+      <div class="trap-text">
+        All series reactance i fault-current path måste tas med.
+      </div>
+    </div>
+
+    <div class="trap-item">
+      <div class="trap-title">4. Tar du bort \(X_d''\) när machine voltage source short-circuitas?</div>
+      <div class="trap-text">
+        Nej. Source sätts till zero, men subtransient reactance ligger kvar.
+      </div>
+    </div>
+
+    <div class="trap-item">
+      <div class="trap-title">5. Blandar du ihop positive sequence och modelling assumptions?</div>
+      <div class="trap-text">
+        Positive sequence väljer network. Att resistance, shunt admittance och vissa loads försummas är separata antaganden.
+      </div>
+    </div>
+
+    <div class="trap-item">
+      <div class="trap-title">6. Är \(Z_{Th}\) verkligen sedd från fault point?</div>
+      <div class="trap-text">
+        Final Thevenin equivalent måste definieras vid själva fault-porten.
+      </div>
+    </div>
+
+    <div class="trap-item">
+      <div class="trap-title">7. Blandar du ihop \(Z_{nn}\) och \(Z_{kn}\)?</div>
+      <div class="trap-text">
+        \(Z_{nn}\) är driving-point impedance. \(Z_{kn}\) är transfer/mutual impedance.
+      </div>
+    </div>
+
+    <div class="trap-item">
+      <div class="trap-title">8. Har alla per-unit reactances samma base?</div>
+      <div class="trap-text">
+        Convert till common MVA base och rätt voltage base innan du reducerar network.
+      </div>
+    </div>
+
+    <div class="trap-item">
+      <div class="trap-title">9. Antar du att total fault current = breaker current?</div>
+      <div class="trap-text">
+        Breakern bär bara de source contributions vars current paths passerar den.
+      </div>
+    </div>
+
+    <div class="trap-item">
+      <div class="trap-title">10. Tar du med prefault load current när problemet säger att den försummas?</div>
+      <div class="trap-text">
+        Om prefault load current neglectas ska \(I_L\) inte läggas tillbaka.
+      </div>
+    </div>
+
+  </div>
+
+  <br>
+  <a class="button primary" href="index.html">Gör Kapitel 8 quizet</a>
+</section>
+
+
+</main>
+</div>
+
+
+<script>
+const checks=[...document.querySelectorAll('[data-progress]')];
+const progress=document.getElementById('progress');
+const progressText=document.getElementById('progressText');
+const storageKey='chapter8TheoryCompleteV5';
+
+function loadProgress(){
+  let saved={};
+  try{ saved=JSON.parse(localStorage.getItem(storageKey)||'{}'); }catch(e){}
+  checks.forEach((c,i)=>c.checked=!!saved[i]);
+  updateProgress();
+}
+
+function updateProgress(){
+  const saved={};
+  let done=0;
+  checks.forEach((c,i)=>{
+    saved[i]=c.checked;
+    if(c.checked) done++;
+  });
+  const pct=checks.length ? Math.round(done/checks.length*100) : 0;
+  progress.style.width=pct+'%';
+  progressText.textContent=done+' av '+checks.length+' delar markerade som lästa ('+pct+' %)';
+  localStorage.setItem(storageKey,JSON.stringify(saved));
+}
+
+checks.forEach(c=>c.addEventListener('change',updateProgress));
+loadProgress();
+</script>
+
+</body>
+</html>
