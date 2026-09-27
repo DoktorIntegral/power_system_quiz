@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kapitel 8 – Komplett quiz</title>
+<style>
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color:#111827; background:#f3f4f6;
+}
+body { margin:0; }
+.wrap { max-width:920px; margin:0 auto; padding:28px 18px 48px; }
+h1 { margin:0 0 8px; }
+.subtitle { color:#4b5563; margin-bottom:22px; }
+.card { background:white; border-radius:16px; padding:22px; margin:16px 0; box-shadow:0 4px 18px rgba(0,0,0,.08); }
+.qtitle { font-weight:700; line-height:1.45; margin-bottom:12px; }
+.note { color:#6b7280; font-size:.92rem; margin-bottom:8px; }
+.option { display:block; border:1px solid #d1d5db; border-radius:10px; padding:11px 12px; margin:8px 0; cursor:pointer; }
+.option:hover { background:#f9fafb; }
+.option input { margin-right:10px; }
+.correct { border-color:#10b981; background:#ecfdf5; }
+.incorrect { border-color:#ef4444; background:#fef2f2; }
+.feedback { display:none; margin-top:12px; background:#f3f4f6; border-radius:10px; padding:12px; line-height:1.45; }
+.actions { position:sticky; bottom:0; background:rgba(243,244,246,.96); padding:14px 0; display:flex; gap:10px; flex-wrap:wrap; }
+button { border:0; border-radius:10px; padding:12px 16px; font-weight:700; cursor:pointer; }
+.primary { background:#111827; color:white; }
+.secondary { background:white; border:1px solid #d1d5db; }
+#result { display:none; background:#eef2ff; border-radius:12px; padding:14px; margin-top:16px; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Kapitel 8 – Symmetrical Faults: komplett quiz</h1>
+  <div class="subtitle">25 frågor som täcker R–L-transienter, generatorfel, positive sequence, per-unit/Thevenin, Zbus, busspänningar, grenströmmar, breaker/fuse selection och superposition.</div>
+  <div id="quiz"></div>
+  <div id="result"></div>
+  <div class="actions">
+    <button class="primary" onclick="gradeQuiz()">Rätta quizet</button>
+    <button class="secondary" onclick="resetQuiz()">Börja om</button>
+  </div>
+</div>
+<script>
+const questions = [{"q": "Vilket påstående beskriver bäst varför en bolted three-phase fault normalt ger mycket större ström än normal drift?", "type": "single", "options": ["Felet ger en mycket låg impedans samtidigt som nätets källor fortfarande driver ström mot felpunkten", "Felet gör att alla nätets reaktanser automatiskt blir noll", "Felet ökar systemets frekvens och därmed strömmen", "Felet gör att lastimpedanserna kopplas i serie med generatorerna"], "correct": [0], "explanation": "Den stora felströmmen beror framför allt på att felimpedansen är mycket låg medan nätets källor fortfarande driver ström mot felpunkten."}, {"q": "Ett trefasfel är perfekt balanserat. Vilket alternativ beskriver korrekt varför endast positive-sequence network används i kapitel 8?", "type": "single", "options": ["De tre fasstorheterna är fortfarande balanserade och kan representeras av endast positiv sekvens", "Negative-sequence network kan användas men ger alltid exakt samma ström som positive-sequence network", "Zero-sequence network används implicit inuti positive-sequence network", "Positive-sequence network används bara därför att transformatorerna är Y-kopplade"], "correct": [0], "explanation": "Ett balanserat trefasfel innehåller bara positivsekvenskomponenten i den modell som används i kapitel 8."}, {"q": "Vilka av följande egenskaper hör till den förenklade positive-sequence-modellen för subtransienta trefasfel? Välj alla korrekta.", "type": "multi", "options": ["Transmissionsledningar representeras huvudsakligen av seriereaktanser", "Transformatorer representeras huvudsakligen av läckreaktanser", "Synkronmaskiner representeras med intern spänningskälla bakom subtransient reaktans", "Alla statiska laster måste modelleras med full komplex impedans"], "correct": [0, 1, 2], "explanation": "I den förenklade modellen används seriereaktans för ledningar, läckreaktans för transformatorer och intern spänningskälla bakom Xd'' för synkronmaskiner. Icke-roterande laster försummas normalt."}, {"q": "Vilket påstående om X_d'', X_d' och X_d är mest korrekt för en synkrongenerator efter ett trefasfel?", "type": "single", "options": ["X_d'' är relevant först, därefter X_d', och slutligen X_d när steady state närmas", "X_d används först eftersom steady-state-modellen alltid gäller omedelbart efter felet", "X_d'' används bara för DC-offseten och påverkar inte AC-felströmmen", "De tre reaktanserna används samtidigt som tre parallella grenar"], "correct": [0], "explanation": "De tre reaktanserna beskriver samma maskin i olika tidsområden: subtransient, transient och slutligen steady state."}, {"q": "Vilket påstående beskriver bäst relationen mellan generatorns reaktans och dess symmetriska AC-felström under det initiala förloppet?", "type": "single", "options": ["När den effektiva reaktansen ökar från X_d'' mot X_d minskar AC-felströmmen", "När reaktansen ökar ökar AC-felströmmen eftersom energin frigörs långsammare", "AC-felströmmen är oberoende av reaktansen så länge spänningen är konstant", "AC-felströmmen påverkas endast av armaturresistansen"], "correct": [0], "explanation": "För ungefär konstant intern spänning ger större reaktans lägre ström."}, {"q": "Vilket påstående beskriver bäst varför DC-offseten i en R–L-felström klingar av?", "type": "single", "options": ["Resistansen dissipierar den energi som är kopplad till transienten, vilket ger exponentiell avklingning", "Induktansen ökar gradvis tills DC-komponenten blir noll", "Nätfrekvensen sjunker till noll efter felet", "DC-offseten omvandlas direkt till negative-sequence current"], "correct": [0], "explanation": "R i förhållande till L bestämmer tidskonstanten och därmed hur snabbt den transienta komponenten klingar av."}, {"q": "Två identiska R–L-system utsätts för samma typ av fel, men vid olika tidpunkter i spänningsvågen. Vilket är mest korrekt?", "type": "single", "options": ["De kan få samma symmetriska AC-komponent men olika initial DC-offset", "De måste få olika AC-rms-ström eftersom felögonblicket ändrar impedansen", "De får alltid identiska strömvågformer eftersom nätet är identiskt", "Endast frekvensen på felströmmen förändras mellan fallen"], "correct": [0], "explanation": "AC-komponentens rms-värde bestäms av nätets impedans, medan DC-offseten beror på felögonblickets fasläge."}, {"q": "När man bestämmer Z_TH sedd från en felpunkt i ett nät, vad innebär det att släcka de interna maskinspänningskällorna?", "type": "single", "options": ["De ideala spänningskällorna ersätts med kortslutningar medan maskinreaktanserna behålls", "Både spänningskällorna och maskinreaktanserna tas bort helt", "Spänningskällorna ersätts med öppna kretsar", "Alla maskinreaktanser ersätts med samma standardvärde"], "correct": [0], "explanation": "En ideal spänningskälla som sätts till 0 V ersätts med kortslutning, men dess serieimpedans finns kvar."}, {"q": "Du reducerar ett nät för att hitta Theveninimpedansen vid bus 2. Vilket påstående är korrekt?", "type": "single", "options": ["Du får förenkla nätet i valfri ordning, men den slutliga ekvivalenta impedansen måste vara sedd från bus 2", "Du måste börja reducera vid bus 2, annars blir resultatet fel", "Z_TH blir samma oavsett vilken bus som används som port", "Z_TH är alltid lika med den minsta reaktansen i nätet"], "correct": [0], "explanation": "Beräkningsordningen är fri, men Thevenin-porten måste vara den aktuella felpunkten."}, {"q": "Vilket påstående beskriver bäst skillnaden mellan total fault current och current through a specific breaker?", "type": "single", "options": ["Total fault current är summan av alla bidrag till felet, medan breakerströmmen bara innehåller bidrag vars strömväg passerar brytaren", "Breakerströmmen är alltid större än total fault current", "Total fault current kommer bara från generatorer, medan breakerströmmen bara kommer från motorer", "De två strömmarna är alltid identiska vid trefasfel"], "correct": [0], "explanation": "Breakerströmmen beror på nätets topologi och vilka källbidrag som faktiskt passerar brytaren."}, {"q": "Vilka påståenden om Z_bus är korrekta i den analys som används för trefasfel? Välj alla korrekta.", "type": "multi", "options": ["Z_bus = Y_bus⁻¹", "Diagonaltermen Z_ii är driving-point impedance vid bus i", "Off-diagonaltermen Z_ij beskriver en transfer impedance mellan bussar", "Varje diagonalterm Z_ii är prefault-spänningen vid bus i"], "correct": [0, 1, 2], "explanation": "Zbus är inversen av Ybus. Diagonaltermerna är driving-point impedances och off-diagonaltermerna är transfer impedances."}, {"q": "Följande bus impedance matrix gäller för ett olastat system: Z_bus = j[[0,12, 0,04, 0,03],[0,04, 0,10, 0,05],[0,03, 0,05, 0,14]]. Prefault-spänningen vid bus 2 är 1,00∠0° pu. Vad blir amplituden på en bolted three-phase fault current vid bus 2?", "type": "single", "options": ["7,14 pu", "8,33 pu", "10,00 pu", "20,00 pu"], "correct": [2], "explanation": "Vid fel på bus 2 används Z22 = j0,10. Därför blir |If| = 1,00/0,10 = 10,00 pu."}, {"q": "Ett tvåbussystem har Z_bus = j[[0,10, 0,04],[0,04, 0,12]]. Båda bussarna har prefault-spänningen 1,00 pu. Ett bolted three-phase fault inträffar vid bus 2. Använd V_1,fault = V_1,prefault − (Z_12/Z_22)V_2,prefault. Vad blir spänningen vid bus 1 under felet?", "type": "single", "options": ["0,33 pu", "0,67 pu", "0,88 pu", "1,00 pu"], "correct": [1], "explanation": "V1,fault = 1,00 − (0,04/0,12)·1,00 = 1,00 − 0,333 ≈ 0,67 pu."}, {"q": "En R–L-krets har R = 0,4 Ω och L = 8 mH. Hur stor är tidskonstanten för DC-offsetens avklingning?", "type": "single", "options": ["5 ms", "20 ms", "32 ms", "50 ms"], "correct": [1], "explanation": "T = L/R = 0,008/0,4 = 0,020 s = 20 ms."}, {"q": "Vilket påstående beskriver bäst varför Z_bus-metoden är användbar i större kraftsystem?", "type": "single", "options": ["När Z_bus väl är känt kan fault current vid olika bussar beräknas direkt från respektive diagonalterm och prefault-spänning", "Z_bus gör att alla transformatorer och ledningar kan tas bort ur modellen", "Z_bus används endast för att beräkna DC-offset", "Z_bus eliminerar behovet av prefault-spänningar"], "correct": [0], "explanation": "När Zbus är känt finns driving-point impedances direkt i diagonaltermerna, vilket gör fault calculations vid olika bussar enkla."}, {"q": "Vilket påstående beskriver bäst varför hög X/R-kvot kan vara viktig vid val av circuit breaker?", "type": "single", "options": ["Hög X/R ger långsammare avklingning av DC-offseten, så den asymmetriska strömmen kan fortfarande vara stor när brytaren öppnar", "Hög X/R gör att nätets frekvens ökar och brytaren måste därför öppna snabbare", "Hög X/R innebär att den symmetriska felströmmen alltid är noll", "Hög X/R gör att DC-offseten försvinner omedelbart"], "correct": [0], "explanation": "Eftersom T = X/(ωR) ökar med X/R klingar DC-offseten av långsammare. Det kan öka den totala ström som brytaren måste hantera vid öppning."}, {"q": "En circuit breaker har en symmetrical interrupting capability på 40 kA. Om dess asymmetriska interrupting capability är 1,4 gånger den symmetriska, vilken asymmetrisk rms-ström motsvarar detta?", "type": "single", "options": ["28 kA", "40 kA", "56 kA", "69,3 kA"], "correct": [2], "explanation": "1,4 · 40 kA = 56 kA."}, {"q": "Vilka av följande är rating-begrepp för power circuit breakers som tas upp i kursboken? Välj alla korrekta.", "type": "multi", "options": ["Rated maximum voltage", "Rated continuous current", "Rated short-circuit current", "Rated rotor speed"], "correct": [0, 1, 2], "explanation": "Boken tar upp bland annat rated maximum voltage, continuous current, short-circuit current, short-time current och interrupting time. Rotor speed är inte en breaker-rating."}, {"q": "Vilket påstående beskriver en current-limiting fuse bäst enligt kursboken?", "type": "single", "options": ["Den kan bryta en hög felström på mindre än en halv period, innan strömmen når sitt fulla möjliga toppvärde", "Den väntar alltid flera sekunder för att säkerställa att felet är permanent", "Den används bara för att mäta felström och bryter aldrig kretsen", "Den ökar felströmmen kortvarigt för att få reläskyddet att reagera"], "correct": [0], "explanation": "En current-limiting fuse kan reagera så snabbt att den begränsar strömmens topp innan den hinner utvecklas fullt."}, {"q": "I direct method finns betydande prefault load current. Vad behöver man normalt bestämma innan själva felet löses?", "type": "single", "options": ["Maskinernas interna spänningar från prefault-tillståndet", "Endast Z_bus diagonaltermer, oberoende av prefault-driften", "DC-offsetens initialvärde i varje ledning", "Breakerens mekaniska öppningshastighet"], "correct": [0], "explanation": "Direct method använder prefault-spänningar och strömmar för att beräkna interna maskinspänningar innan det felade nätet löses."}, {"q": "Vilken är en viktig fördel med superposition jämfört med direct method i ett system med många synkronmaskiner?", "type": "single", "options": ["I fault-komponenten kan maskinspänningskällorna kortslutas och endast en källa vid felpunkten behövs", "Superposition gör att alla nätimpedanser kan försummas", "Superposition eliminerar alltid behovet av prefault-spänningen", "Superposition fungerar även om nätmodellen är icke-linjär utan approximationer"], "correct": [0], "explanation": "I superpositionsmetodens fault-del släcks maskinkällorna och prefault-spänningen vid felpunkten används som den enda drivande källan."}, {"q": "Ett trebusssystem har Z_bus = j[[0,10,0,03,0,02],[0,03,0,12,0,04],[0,02,0,04,0,15]]. Prefault-spänningarna är 1,00 pu. Ett bolted trefasfel sker på bus 2. Vad blir ungefär spänningen på bus 3 under felet?", "type": "single", "options": ["0,00 pu", "0,33 pu", "0,67 pu", "0,87 pu"], "correct": [2], "explanation": "V3,fault = 1 − (Z32/Z22)·1 = 1 − 0,04/0,12 = 1 − 0,333 ≈ 0,67 pu."}, {"q": "Efter att busspänningarna under ett fel har beräknats, hur bestäms strömbidraget genom en ledning mellan två bussar i den förenklade reaktansmodellen?", "type": "single", "options": ["Genom spänningsskillnaden mellan bussarna dividerad med ledningens serieimpedans", "Genom att alltid använda total fault current direkt", "Genom att multiplicera busspänningarna med Z_bus diagonaltermer", "Genom att addera prefault-spänningarna på de två bussarna"], "correct": [0], "explanation": "Grenströmmen fås med Ohms lag från spänningsskillnaden över den aktuella grenimpedansen."}, {"q": "Om prefault load currents försummas i ett olastat positivsekvensnät, vilket påstående används ofta för maskinernas interna spänningar före felet?", "type": "single", "options": ["De kan tas lika med prefault-spänningen i både magnitud och fas", "De måste sättas till noll eftersom systemet är olastat", "De måste alltid ha olika fasvinklar för olika generatorer", "De bestäms enbart av DC-offseten"], "correct": [0], "explanation": "När prefault load currents försummas blir spänningsfallen över maskinreaktanserna noll, så interna spänningar kan tas lika med prefault-spänningen."}, {"q": "Vilket påstående skiljer korrekt mellan symmetrical fault och asymmetrical fault current?", "type": "single", "options": ["Symmetrical fault beskriver en balanserad feltyp, medan asymmetrical fault current kan syfta på en AC-felström med DC-offset", "Symmetrical fault och symmetrical fault current betyder alltid exakt samma sak", "Asymmetrical fault current betyder alltid att själva felet är ett enfas-jordfel", "Ett trefasfel kan aldrig ha en asymmetrisk total strömvågform"], "correct": [0], "explanation": "Feltypen och strömvågformens asymmetri är olika begrepp. Ett balanserat trefasfel kan få en asymmetrisk total ström på grund av DC-offset."}];
+
+function render() {
+  const quiz = document.getElementById('quiz');
+  quiz.innerHTML = '';
+  questions.forEach((q,i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    const inputType = q.type === 'multi' ? 'checkbox' : 'radio';
+    card.innerHTML = `
+      <div class="qtitle">${i+1}. ${q.q}</div>
+      ${q.type === 'multi' ? '<div class="note">Välj alla korrekta alternativ.</div>' : ''}
+      <div id="opts-${i}"></div>
+      <div class="feedback" id="fb-${i}"></div>
+    `;
+    quiz.appendChild(card);
+    const opts = card.querySelector(`#opts-${i}`);
+    q.options.forEach((opt,j) => {
+      const label = document.createElement('label');
+      label.className = 'option';
+      label.innerHTML = `<input type="${inputType}" name="q${i}" value="${j}"> ${opt}`;
+      opts.appendChild(label);
+    });
+  });
+}
+
+function selected(i) {
+  return [...document.querySelectorAll(`input[name="q${i}"]:checked`)].map(x=>Number(x.value)).sort((a,b)=>a-b);
+}
+function eq(a,b) { return a.length===b.length && a.every((v,i)=>v===b[i]); }
+
+function gradeQuiz() {
+  let score=0;
+  questions.forEach((q,i) => {
+    const s=selected(i), c=[...q.correct].sort((a,b)=>a-b);
+    const ok=eq(s,c); if(ok) score++;
+    const labels=[...document.querySelectorAll(`#opts-${i} .option`)];
+    labels.forEach((lab,j)=>{
+      lab.classList.remove('correct','incorrect');
+      if(c.includes(j)) lab.classList.add('correct');
+      else if(s.includes(j)) lab.classList.add('incorrect');
+    });
+    const fb=document.getElementById(`fb-${i}`);
+    fb.style.display='block';
+    fb.innerHTML=`<strong>${ok?'Rätt':'Inte riktigt'}</strong><br>${q.explanation}`;
+  });
+  const result=document.getElementById('result');
+  result.style.display='block';
+  result.textContent=`Poäng: ${score} / ${questions.length}`;
+  result.scrollIntoView({behavior:'smooth'});
+}
+
+function resetQuiz() {
+  document.querySelectorAll('input').forEach(x=>x.checked=false);
+  document.querySelectorAll('.option').forEach(x=>x.classList.remove('correct','incorrect'));
+  document.querySelectorAll('.feedback').forEach(x=>x.style.display='none');
+  document.getElementById('result').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+render();
+</script>
+</body>
+</html>
