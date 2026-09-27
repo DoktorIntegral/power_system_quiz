@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kapitel 4–5 – Transmission Lines Quiz</title>
+
+<style>
+:root{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#111827;
+  background:#f3f4f6
+}
+
+body{
+  margin:0
+}
+
+.wrap{
+  max-width:920px;
+  margin:0 auto;
+  padding:28px 18px 48px
+}
+
+h1{
+  margin:0 0 8px
+}
+
+.subtitle{
+  color:#4b5563;
+  margin-bottom:22px;
+  line-height:1.45
+}
+
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:22px;
+  margin:16px 0;
+  box-shadow:0 4px 18px rgba(0,0,0,.08)
+}
+
+.qtitle{
+  font-weight:700;
+  line-height:1.5;
+  margin-bottom:12px
+}
+
+.note{
+  color:#6b7280;
+  font-size:.92rem;
+  margin-bottom:8px
+}
+
+.option{
+  display:block;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  padding:11px 12px;
+  margin:8px 0;
+  cursor:pointer;
+  line-height:1.4
+}
+
+.option:hover{
+  background:#f9fafb
+}
+
+.option input{
+  margin-right:10px
+}
+
+.correct{
+  border-color:#10b981;
+  background:#ecfdf5
+}
+
+.incorrect{
+  border-color:#ef4444;
+  background:#fef2f2
+}
+
+.feedback{
+  display:none;
+  margin-top:12px;
+  background:#f3f4f6;
+  border-radius:10px;
+  padding:12px;
+  line-height:1.5
+}
+
+.actions{
+  position:sticky;
+  bottom:0;
+  background:rgba(243,244,246,.96);
+  padding:14px 0;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:12px 16px;
+  font-weight:700;
+  cursor:pointer
+}
+
+.primary{
+  background:#111827;
+  color:#fff
+}
+
+.secondary{
+  background:#fff;
+  border:1px solid #d1d5db
+}
+
+#result{
+  display:none;
+  background:#eef2ff;
+  border-radius:12px;
+  padding:16px;
+  margin-top:16px;
+  font-weight:700;
+  font-size:1.05rem
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<h1>Kapitel 4–5 – Transmission Lines</h1>
+
+<div class="subtitle">
+26 frågor om transmission-line parameters, transposition, bundling,
+short/medium/long-line models, ABCD, lossless lines, SIL,
+voltage regulation, loadability och compensation.
+</div>
+
+<div id="quiz"></div>
+
+<div id="result"></div>
+
+<div class="actions">
+  <button class="primary" onclick="gradeQuiz()">Rätta quizet</button>
+  <button class="secondary" onclick="resetQuiz()">Börja om</button>
+</div>
+
+</div>
+
+<script>
+
+const questions = [
+
+{
+q:"Vilka kopplingar mellan transmission-line parameters och deras huvudsakliga fysikaliska betydelse stämmer enligt föreläsningsmaterialet? Välj alla korrekta.",
+type:"multi",
+options:[
+"Induktans hör samman med det magnetiska fält som orsakas av strömmen",
+"Kapacitans hör samman med det elektriska fält som orsakas av spänningen",
+"Resistans och konduktans är båda förknippade med förluster",
+"Kapacitans bestäms huvudsakligen av ledarens mekaniska draghållfasthet"
+],
+correct:[0,1,2],
+explanation:"I kursmaterialet kopplas R och G till förluster, L till magnetfältet från strömmen och C till det elektriska fältet från spänningen."
+},
+
+{
+q:"En trefasledning har osymmetrisk geometrisk placering av fasledarna. Varför används conductor transposition längs ledningen?",
+type:"single",
+options:[
+"För att varje fas i genomsnitt ska få samma elektromagnetiska omgivning och därmed lika fasinduktanser",
+"För att göra resistansen i ledarna exakt noll",
+"För att eliminera behovet av shuntkapacitans i långa ledningar",
+"För att minska systemfrekvensen längs ledningen"
+],
+correct:[0],
+explanation:"Genom att varje fas upptar varje fysisk position lika lång sträcka balanseras flux linkages och fasegenskaperna blir lika i medel."
+},
+
+{
+q:"En EHV-ledning ändras från en ensam ledare per fas till flera bundlade ledare per fas. Vilka effekter stöds av materialet? Välj alla korrekta.",
+type:"multi",
+options:[
+"Det elektriska fältet vid ledarytan minskar",
+"Coronaeffekten reduceras",
+"Ledningens serieinduktiva reaktans kan minska",
+"Shuntkapacitansen blir alltid exakt noll"
+],
+correct:[0,1,2],
+explanation:"Bundling minskar fältstyrkan vid ytan och därmed corona. Den ökar också den effektiva GMR och kan därför minska serieinduktiv reaktans."
+},
+
+{
+q:"En 60-Hz overhead transmission line är 15 km lång. Vilken modell är mest förenlig med kursbokens klassificering?",
+type:"single",
+options:[
+"Short-line model med endast lumped series impedance och försummad shunt admittance",
+"Nominal π-model med halva shuntadmittansen vid vardera änden",
+"Exact distributed-parameter model eftersom alla ledningar över 10 km betraktas som långa",
+"Lossless-line model eftersom en kort ledning automatiskt har R = G = 0"
+],
+correct:[0],
+explanation:"För overheadledningar kortare än ungefär 25 km vid 60 Hz används short-line approximation där shuntadmittansen försummas."
+},
+
+{
+q:"En 180 km lång overheadledning vid 60 Hz ska analyseras med en handberäkning. Vilket val är mest rimligt enligt kursmaterialet?",
+type:"single",
+options:[
+"Nominal π-model där Z är lumped och Y/2 placeras vid vardera änden",
+"Short-line model där all shuntadmittans försummas",
+"En modell med endast shuntadmittans och ingen serieimpedans",
+"En ideal ledning med A = D = 0"
+],
+correct:[0],
+explanation:"180 km ligger i området för medium-length lines, där nominal π är den vanliga approximationen."
+},
+
+{
+q:"Vilket påstående beskriver bäst varför en lång transmission line behandlas med distributed parameters i stället för att bara använda en enda lumped Z och Y?",
+type:"single",
+options:[
+"Spänning och ström varierar längs ledningen och serieimpedans samt shuntadmittans är kontinuerligt fördelade över längden",
+"Långa ledningar saknar kapacitans",
+"Resistansen blir negativ när ledningen överstiger 250 km",
+"ABCD-parametrar kan endast definieras för distribuerade ledningar"
+],
+correct:[0],
+explanation:"Den exakta long-line-modellen bygger på differentialekvationer där z och y är distribuerade längs hela ledningen."
+},
+
+{
+q:"För ett passivt, bilateralt transmission-line two-port network, vilka påståenden om ABCD-parametrarna är korrekta? Välj alla korrekta.",
+type:"multi",
+options:[
+"A och D är dimensionslösa",
+"B har enheten ohm",
+"C har enheten siemens",
+"För ett sådant nät gäller alltid A + D = B + C"
+],
+correct:[0,1,2],
+explanation:"Från VS = AVR + BIR och IS = CVR + DIR följer enheterna. För ett passivt bilateralt nät används relationen AD − BC = 1."
+},
+
+{
+q:"Vilket alternativ ger ABCD-parametrarna för short-line approximationen med total series impedance Z?",
+type:"single",
+options:[
+"A = D = 1, B = Z, C = 0",
+"A = D = 0, B = Z, C = 1/Z",
+"A = D = 1 + YZ/2, B = Z, C = Y(1 + YZ/4)",
+"A = D = cosh(γl), B = Zc sinh(γl), C = sinh(γl)/Zc"
+],
+correct:[0],
+explanation:"Short-line-modellen innehåller bara serieimpedansen, så VS = VR + ZIR och IS = IR."
+},
+
+{
+q:"Vad är den mest korrekta tolkningen av characteristic impedance Zc och propagation constant γ i den exakta long-line-modellen?",
+type:"single",
+options:[
+"Zc = √(z/y) beskriver linjens karakteristiska impedans och γ = √(zy) beskriver dämpning och fasförskjutning längs ledningen",
+"Zc är alltid lika med total series impedance Z och γ är alltid lika med linjelängden",
+"Zc beskriver endast ledarens DC-resistans och γ beskriver endast shuntkonduktansen",
+"Zc och γ används endast för short-line approximationen"
+],
+correct:[0],
+explanation:"I den distribuerade modellen definieras Zc = √(z/y) och γ = √(zy) = α + jβ."
+},
+
+{
+q:"En transmission line antas vara lossless. Vilket alternativ beskriver då modellen korrekt?",
+type:"single",
+options:[
+"R = G = 0, Zc blir rent reell och γ blir rent imaginär",
+"L = C = 0, Zc blir rent imaginär och γ blir reell",
+"R = 0 men G måste vara mycket stor",
+"Zc = 0 eftersom ingen aktiv effekt förloras"
+],
+correct:[0],
+explanation:"För en lossless line är z = jωL och y = jωC. Då blir Zc = √(L/C) reell och γ = jβ."
+},
+
+{
+q:"Vilket alternativ beskriver bäst line loadability enligt kursbokens diskussion om olika ledningslängder?",
+type:"single",
+options:[
+"Korta ledningar begränsas ofta av thermal/equipment ratings, längre ledningar av voltage drop och mycket långa ledningar kan begränsas av steady-state stability",
+"Alla ledningslängder begränsas endast av conductor resistance",
+"Korta ledningar begränsas främst av steady-state stability medan långa ledningar bara begränsas termiskt",
+"Voltage-drop limits saknar betydelse"
+],
+correct:[0],
+explanation:"Kursboken skiljer mellan thermal limit, voltage-drop limit och steady-state stability limit, där olika begränsningar tenderar att dominera för olika ledningslängder."
+},
+
+{
+q:"En seriekompensering införs på en lång transmission line med seriekondensatorer. Vilken effekt är den viktigaste enligt materialets transmission-line analysis?",
+type:"single",
+options:[
+"Den effektiva serieinduktiva reaktansen minskar, vilket kan höja power-transfer capability och line loadability",
+"Den effektiva serieinduktiva reaktansen ökar",
+"Shuntkapacitansen försvinner fullständigt",
+"Ledningens resistans blir exakt noll"
+],
+correct:[0],
+explanation:"Seriekondensatorernas negativa reaktans motverkar en del av linjens induktiva reaktans och kan därmed öka överföringsförmågan."
+},
+
+{
+q:"En 500 km lång ledning har z = 0,03 + j0,35 Ω/km och y = j4,4×10⁻⁶ S/km. Vilka är ledningens totala Z och Y om per-length-parametrarna multipliceras med längden?",
+type:"single",
+options:[
+"Z = 15 + j175 Ω och Y = j0,0022 S",
+"Z = 0,06 + j0,70 Ω och Y = j8,8×10⁻⁶ S",
+"Z = 150 + j1750 Ω och Y = j0,022 S",
+"Z = 15 + j175 Ω och Y = j2,2 S"
+],
+correct:[0],
+explanation:"500·(0,03 + j0,35) = 15 + j175 Ω och 500·j4,4×10⁻⁶ = j0,0022 S."
+},
+
+{
+q:"För en nominal π-model är Z = j0,20 pu och Y = j0,10 pu. Vilket alternativ ger rätt ABCD-parametrar?",
+type:"single",
+options:[
+"A = D = 0,99, B = j0,20, C = j0,0995",
+"A = D = 1,01, B = j0,20, C = j0,1005",
+"A = D = 1, B = j0,20, C = 0",
+"A = D = 0,20, B = j0,10, C = j0,20"
+],
+correct:[0],
+explanation:"YZ = −0,02. Därför blir A = D = 1 + YZ/2 = 0,99 och C = Y(1 + YZ/4) = j0,0995."
+},
+
+{
+q:"En ideal lossless line har L = 1,0 mH/km och C = 10 nF/km. Ungefär vilken surge impedance Zc får ledningen?",
+type:"single",
+options:[
+"31,6 Ω",
+"100 Ω",
+"316 Ω",
+"1000 Ω"
+],
+correct:[2],
+explanation:"Zc = √(L/C) = √(0,001/10⁻⁸) ≈ 316 Ω."
+},
+
+{
+q:"Vilket påstående om voltage regulation är mest korrekt när sending-end voltage hålls konstant?",
+type:"single",
+options:[
+"Den beskriver förändringen i receiving-end voltage mellan no-load och full-load, och lagging power factor ger typiskt större regulation än leading power factor",
+"Den beskriver endast skillnaden mellan sending-end current och receiving-end current",
+"Den är alltid noll för en transmission line med induktiv reaktans",
+"Leading power factor ger alltid större voltage regulation än lagging power factor"
+],
+correct:[0],
+explanation:"Voltage regulation definieras från skillnaden mellan no-load och full-load receiving-end voltage. Lagging p.f. ger typiskt högre regulation, medan leading p.f. kan ge mindre eller negativ regulation."
+},
+
+{
+q:"En lång, lätt belastad transmission line har fast sending-end voltage. Vilket beteende är typiskt enligt lossless-line-modellen?",
+type:"single",
+options:[
+"Receiving-end voltage kan bli högre än sending-end voltage på grund av linjens kapacitiva laddning",
+"Receiving-end voltage måste alltid vara exakt noll vid no-load",
+"Receiving-end voltage blir alltid lägre ju mindre ström som flyter",
+"Shuntkapacitansen saknar betydelse vid light load"
+],
+correct:[0],
+explanation:"Vid no-load/light load kan den kapacitiva effekten ge en hög receiving-end voltage. Problemet blir mer uttalat för längre linjer."
+},
+
+{
+q:"Vad kännetecknar surge impedance loading (SIL) för en ideal lossless line?",
+type:"single",
+options:[
+"Lastresistansen är lika med Zc och spänningsprofilens magnitud är konstant längs linjen",
+"Lastresistansen är noll och linjen arbetar i kortslutning",
+"Linjen levererar ingen aktiv effekt eftersom Zc är reell",
+"SIL är samma sak som den termiska strömgränsen"
+],
+correct:[0],
+explanation:"SIL är effekten när en lossless line termineras i en resistans lika med Zc. Då blir voltage magnitude flat längs linjen."
+},
+
+{
+q:"Spännings- och strömvågor fortplantas med ungefär 3×10⁸ m/s på en overhead line. Ungefär vilken våglängd motsvarar 60 Hz?",
+type:"single",
+options:[
+"500 km",
+"1000 km",
+"5000 km",
+"18 000 km"
+],
+correct:[2],
+explanation:"λ = v/f ≈ 3×10⁸/60 = 5×10⁶ m = 5000 km."
+},
+
+{
+q:"För en ideal lossless line med oförändrad serieekvivalent X' gäller Pmax = VS·VR/X'. Om både VS och VR fördubblas och X' är oförändrad, hur förändras Pmax?",
+type:"single",
+options:[
+"Den blir oförändrad",
+"Den fördubblas",
+"Den fyrdubblas",
+"Den halveras"
+],
+correct:[2],
+explanation:"Produkten VS·VR multipliceras med 2·2 = 4, så den teoretiska steady-state stability limit fyrdubblas."
+},
+
+{
+q:"Vilken komponent används typiskt på en lätt belastad EHV-line för att absorbera reaktiv effekt och minska overvoltage?",
+type:"single",
+options:[
+"Shunt reactor",
+"Series capacitor",
+"Ideal transformer med 1:1 omsättning",
+"Extra resistans i serie med varje fas"
+],
+correct:[0],
+explanation:"Shunt reactors är induktorer som absorberar reaktiv effekt och används bland annat för att reducera light-load overvoltages."
+},
+
+{
+q:"Vilket påstående beskriver bäst skillnaden mellan shunt reactor och shunt capacitor i kursbokens compensation discussion?",
+type:"single",
+options:[
+"Shunt reactor absorberar reaktiv effekt vid light load, medan shunt capacitor kan leverera reaktiv effekt och stödja spänningen vid heavy load",
+"Båda används endast för att minska serieimpedansen",
+"Shunt capacitor absorberar alltid reaktiv effekt medan shunt reactor alltid levererar den",
+"Ingen av dem påverkar voltage regulation"
+],
+correct:[0],
+explanation:"Kursboken beskriver shunt reactors som absorberande och shunt capacitors som levererande av reaktiv effekt i dessa typiska driftfall."
+},
+
+{
+q:"Vilken beskrivning skiljer bäst long-line equivalent π circuit från medium-line nominal π circuit?",
+type:"single",
+options:[
+"Equivalent π använder modifierade Z' och Y' så att kretsen reproducerar den exakta distributed-line ABCD-matrisen",
+"Equivalent π försummar all shuntadmittans medan nominal π tar med den",
+"Nominal π är alltid exakt för alla ledningslängder",
+"Equivalent π kan bara användas när R = G = 0"
+],
+correct:[0],
+explanation:"För en long line kan ett equivalent π tas fram vars Z' och Y' ger samma ABCD-parametrar som den exakta distributed model. Nominal π använder de direkt lumpade Z och Y som approximation."
+},
+
+{
+q:"Phase spacing Deq hålls konstant men den effektiva bundle-GMR ökas. Vad händer med linjens induktans och serieinduktiva reaktans?",
+type:"single",
+options:[
+"Båda minskar",
+"Båda ökar",
+"Induktansen ökar men reaktansen minskar",
+"Ingen av dem påverkas"
+],
+correct:[0],
+explanation:"Induktansen beror på ln(Deq/GMR). När GMR ökar minskar logaritmen, vilket minskar både L och X = ωL."
+},
+
+{
+q:"För en per-phase two-port gäller VS = AVR + BIR. Anta A = 1, B = j20 Ω, VR = 100∠0° kV och IR = 1∠−90° kA. Vad blir VS?",
+type:"single",
+options:[
+"80∠0° kV",
+"100∠0° kV",
+"120∠0° kV",
+"100 + j20 kV"
+],
+correct:[2],
+explanation:"IR = −j1 kA. Då blir BIR = (j20)(−j1) = +20 kV, alltså VS = 120∠0° kV."
+},
+
+{
+q:"En ledning har en effektiv serieinduktiv reaktans X' = 160 Ω. Total series capacitive compensation är 40% och delas lika mellan två identiska capacitor banks, en vid vardera änden. Vilken reaktans ska varje bank ha?",
+type:"single",
+options:[
+"−j16 Ω",
+"−j32 Ω",
+"−j64 Ω",
+"+j32 Ω"
+],
+correct:[1],
+explanation:"40% av 160 Ω är 64 Ω total kapacitiv kompensation. Delat lika mellan två banker ger 32 Ω per bank, alltså −j32 Ω."
+}
+
+];
+
+function render(){
+
+  const quiz = document.getElementById("quiz");
+
+  questions.forEach((q,i)=>{
+
+    const card = document.createElement("div");
+
+    card.className = "card";
+
+    const inputType =
+      q.type === "multi"
+      ? "checkbox"
+      : "radio";
+
+    card.innerHTML = `
+      <div class="qtitle">
+        ${i+1}. ${q.q}
+      </div>
+
+      ${
+        q.type === "multi"
+        ? '<div class="note">Välj alla korrekta alternativ.</div>'
+        : ''
+      }
+
+      <div id="opts-${i}"></div>
+
+      <div
+        class="feedback"
+        id="fb-${i}">
+      </div>
+    `;
+
+    quiz.appendChild(card);
+
+    const options =
+      card.querySelector(`#opts-${i}`);
+
+    q.options.forEach((option,j)=>{
+
+      const label =
+        document.createElement("label");
+
+      label.className = "option";
+
+      label.innerHTML = `
+        <input
+          type="${inputType}"
+          name="q${i}"
+          value="${j}"
+        >
+        ${option}
+      `;
+
+      options.appendChild(label);
+
+    });
+
+  });
+
+}
+
+
+function selectedIndices(i){
+
+  return [
+    ...document.querySelectorAll(
+      `input[name="q${i}"]:checked`
+    )
+  ]
+  .map(x => Number(x.value))
+  .sort((a,b)=>a-b);
+
+}
+
+
+function arraysEqual(a,b){
+
+  return (
+    a.length === b.length &&
+    a.every((v,i)=>v===b[i])
+  );
+
+}
+
+
+function gradeQuiz(){
+
+  let score = 0;
+
+  questions.forEach((q,i)=>{
+
+    const selected =
+      selectedIndices(i);
+
+    const correct =
+      [...q.correct]
+      .sort((a,b)=>a-b);
+
+    const isCorrect =
+      arraysEqual(
+        selected,
+        correct
+      );
+
+    if(isCorrect){
+      score++;
+    }
+
+    const labels =
+      [
+        ...document.querySelectorAll(
+          `#opts-${i} .option`
+        )
+      ];
+
+    labels.forEach((label,j)=>{
+
+      label.classList.remove(
+        "correct",
+        "incorrect"
+      );
+
+      if(correct.includes(j)){
+
+        label.classList.add(
+          "correct"
+        );
+
+      }
+      else if(selected.includes(j)){
+
+        label.classList.add(
+          "incorrect"
+        );
+
+      }
+
+    });
+
+    const feedback =
+      document.getElementById(
+        `fb-${i}`
+      );
+
+    feedback.style.display =
+      "block";
+
+    feedback.innerHTML = `
+      <strong>
+        ${
+          isCorrect
+          ? "Rätt"
+          : "Inte riktigt"
+        }
+      </strong>
+
+      <br>
+
+      ${q.explanation}
+    `;
+
+  });
+
+  const result =
+    document.getElementById(
+      "result"
+    );
+
+  result.style.display =
+    "block";
+
+  result.textContent =
+    `Poäng: ${score} / ${questions.length}`;
+
+  result.scrollIntoView({
+    behavior:"smooth"
+  });
+
+}
+
+
+function resetQuiz(){
+
+  document
+    .querySelectorAll("input")
+    .forEach(
+      x => x.checked = false
+    );
+
+  document
+    .querySelectorAll(".option")
+    .forEach(
+      x =>
+      x.classList.remove(
+        "correct",
+        "incorrect"
+      )
+    );
+
+  document
+    .querySelectorAll(".feedback")
+    .forEach(
+      x =>
+      x.style.display = "none"
+    );
+
+  document
+    .getElementById("result")
+    .style.display = "none";
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>
