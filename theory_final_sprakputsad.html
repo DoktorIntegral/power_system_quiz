@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Kapitel 4–5 – Transmission Lines – Teori</title>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']]
+  }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+:root{
+  --bg:#f2f6fb;
+  --card:#ffffff;
+  --text:#17243a;
+  --muted:#65758b;
+  --border:#d9e3ef;
+  --navy:#173f63;
+  --primary:#24669f;
+  --primary-2:#3b82c4;
+  --primary-soft:#edf5fd;
+  --teal:#277b68;
+  --teal-soft:#edf8f4;
+  --amber:#b97816;
+  --amber-soft:#fff7e8;
+  --red:#b64d5d;
+  --red-soft:#fff1f3;
+  --purple:#6655a8;
+  --purple-soft:#f3f0ff;
+  --formula-bg:#f8fbff;
+  --formula-border:#bed4ea;
+  --formula-label:#e2effc;
+  --shadow:0 10px 28px rgba(28,65,102,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:radial-gradient(circle at 10% 0%,rgba(59,130,196,.07),transparent 28rem),var(--bg);
+  color:var(--text);
+  line-height:1.68;
+}
+.topbar{
+  position:sticky;top:0;z-index:30;
+  background:rgba(242,246,251,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(217,227,239,.95);
+}
+.topbar-inner{
+  max-width:1140px;margin:auto;padding:12px 20px;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+}
+.brand{font-weight:850;color:var(--navy)}
+.buttons{display:flex;gap:8px;flex-wrap:wrap}
+.button{
+  display:inline-block;text-decoration:none;padding:9px 14px;border-radius:10px;
+  border:1px solid var(--border);background:#fff;color:var(--text);font-weight:750;
+  transition:.18s ease;
+}
+.button:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(28,65,102,.10)}
+.button.primary{
+  background:linear-gradient(135deg,var(--primary),var(--navy));
+  border-color:transparent;color:#fff;
+}
+.hero{max-width:1140px;margin:auto;padding:58px 20px 32px}
+.chapter{
+  display:inline-flex;align-items:center;gap:7px;
+  background:linear-gradient(135deg,#e9f3fc,#f3f7ff);
+  color:var(--primary);border:1px solid #d4e6f7;
+  padding:6px 11px;border-radius:999px;font-weight:850;font-size:13px;margin-bottom:13px;
+}
+h1{
+  font-size:clamp(2.3rem,5vw,4.1rem);line-height:1.03;letter-spacing:-.04em;
+  margin:0 0 14px;color:#12263d;
+}
+.subtitle{max-width:920px;color:var(--muted);font-size:1.06rem}
+.page{
+  max-width:1140px;margin:auto;padding:0 20px 64px;
+  display:grid;grid-template-columns:252px minmax(0,1fr);gap:22px;
+}
+.sidebar{
+  position:sticky;top:76px;align-self:start;background:rgba(255,255,255,.96);
+  border:1px solid var(--border);border-radius:16px;padding:15px;box-shadow:var(--shadow);
+  max-height:calc(100vh - 94px);overflow:auto;
+}
+.sidebar strong{display:block;margin:2px 7px 9px;color:var(--navy)}
+.sidebar a{
+  display:block;text-decoration:none;color:#43556d;padding:7px 9px;border-radius:8px;
+  font-size:14px;transition:.15s ease;
+}
+.sidebar a:hover{background:var(--primary-soft);color:var(--primary)}
+.card{
+  position:relative;background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:25px;margin-bottom:19px;box-shadow:var(--shadow);overflow:hidden;
+}
+.card::before{
+  content:"";position:absolute;inset:0 auto 0 0;width:3px;
+  background:linear-gradient(var(--primary-2),var(--teal));opacity:.55;
+}
+.card h2{margin-top:0;color:var(--navy);letter-spacing:-.015em}
+.card h3{margin-top:25px;color:#294965}
+.grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;margin-top:15px;
+}
+.grid-box{
+  background:linear-gradient(180deg,#fbfdff,#f7faff);
+  border:1px solid var(--border);padding:14px;border-radius:11px;
+}
+.grid-box strong{display:block;color:var(--navy);margin-bottom:4px}
+.formula{
+  position:relative;background:linear-gradient(180deg,#fbfdff,var(--formula-bg));
+  border:1px solid var(--formula-border);border-left:4px solid var(--primary-2);
+  border-radius:12px;padding:25px 18px 16px;margin:15px 0;overflow-x:auto;text-align:center;
+}
+.eqno{
+  position:absolute;top:7px;right:9px;font-size:11px;font-weight:850;color:var(--primary);
+  background:var(--formula-label);border:1px solid #cfe1f3;padding:2px 7px;border-radius:999px;
+}
+.note{
+  background:var(--primary-soft);border-left:4px solid var(--primary);
+  padding:13px 15px;border-radius:0 10px 10px 0;margin:14px 0;
+}
+.note.good{background:var(--teal-soft);border-left-color:var(--teal)}
+.note.warning{background:var(--amber-soft);border-left-color:var(--amber)}
+.note.danger{background:var(--red-soft);border-left-color:var(--red)}
+.note.purple{background:var(--purple-soft);border-left-color:var(--purple)}
+details{
+  border:1px solid var(--border);border-radius:11px;margin:11px 0;overflow:hidden;background:#fff;
+}
+summary{cursor:pointer;padding:13px 15px;font-weight:800;background:#f9fbfe;color:#294965}
+.details-content{padding:6px 15px 16px}
+.table-wrap{
+  overflow-x:auto;border:1px solid var(--border);border-radius:12px;margin-top:15px;
+}
+.table-wrap table{margin-top:0}
+table{width:100%;border-collapse:collapse;margin-top:15px;font-size:.95rem}
+th,td{padding:11px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{background:#f2f7fc;color:#344b63;font-weight:800}
+tr:last-child td{border-bottom:none}
+.check{
+  display:block;margin-top:17px;padding:11px 12px;background:#f9fbfd;
+  border:1px solid var(--border);border-radius:10px;color:#41546b;
+}
+.progress-container{margin-top:21px}
+.progress-track{height:9px;background:#e5ecf4;border-radius:20px;overflow:hidden}
+.progress{height:100%;width:0%;background:linear-gradient(90deg,var(--primary),var(--teal));transition:.3s}
+.progress-text{margin-top:7px;color:var(--muted);font-size:14px}
+.trap-list{display:grid;gap:10px;margin-top:14px}
+.trap-item{
+  background:#fbfcfe;border:1px solid var(--border);border-left:4px solid var(--amber);
+  border-radius:11px;padding:13px 15px;
+}
+.trap-title{font-weight:820;color:var(--navy);margin-bottom:3px}
+.trap-text{color:#52657b}
+.kpi{
+  display:inline-block;margin:3px 6px 3px 0;padding:4px 8px;border-radius:7px;
+  background:var(--purple-soft);color:#54458b;font-weight:750;font-size:.9rem;
+}
+.small{font-size:.9rem;color:var(--muted)}
+@media(max-width:860px){
+  .page{grid-template-columns:1fr}
+  .sidebar{position:static;max-height:none}
+  .grid{grid-template-columns:1fr}
+  .card{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">Power System Analysis</div>
+    <div class="buttons">
+      <a class="button" href="../">Startsida</a>
+      <a class="button primary" href="index.html">Gör quizet</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="chapter">Kapitel 4–5</div>
+  <h1>Transmission Lines</h1>
+  <p class="subtitle">
+    Kontrollerad teorisammanfattning av transmission-line design och parametrar,
+    conductor transposition, bundled conductors, short/medium/long-line models, ABCD,
+    equivalent \(\pi\), voltage regulation, lossless lines, SIL, loadability och reactive compensation.
+  </p>
+</section>
+
+<div class="page">
+
+<nav class="sidebar">
+  <strong>Innehåll</strong>
+  <a href="#important">Viktigast att kunna</a>
+  <a href="#design">Design considerations</a>
+  <a href="#parameters">R, G, L, C</a>
+  <a href="#transposition">Conductor transposition</a>
+  <a href="#bundling">Bundling</a>
+  <a href="#models">Line models</a>
+  <a href="#abcd">ABCD & Table 5.1</a>
+  <a href="#longline">Long-line equations</a>
+  <a href="#equivpi">Equivalent π</a>
+  <a href="#voltage">Voltage regulation</a>
+  <a href="#lossless">Lossless line & SIL</a>
+  <a href="#power">Power transfer</a>
+  <a href="#loadability">Line loadability</a>
+  <a href="#compensation">Compensation</a>
+  <a href="#extensions">Book extensions</a>
+  <a href="#formulas">Formelsamling</a>
+  <a href="#traps">Vanliga fallgropar</a>
+</nav>
+
+<main>
+
+<section class="card" id="important">
+  <h2>Viktigast att kunna</h2>
+  <div class="grid">
+    <div class="grid-box"><strong>Design</strong>Conductors, insulators, towers och shield wires samt elektriska, mekaniska och ekonomiska designval.</div>
+    <div class="grid-box"><strong>\(R,G,L,C\)</strong>Fysisk betydelse och hur de bygger upp \(z\) och \(y\).</div>
+    <div class="grid-box"><strong>Transposition</strong>Varför unequal phase spacing annars ger olika phase parameters.</div>
+    <div class="grid-box"><strong>Bundling</strong>Corona, effective GMR och lägre series reactance.</div>
+    <div class="grid-box"><strong>Line models</strong>Short line, medium line med nominal \(\pi\) och long distributed line.</div>
+    <div class="grid-box"><strong>ABCD</strong>\(V_S=AV_R+BI_R\), \(I_S=CV_R+DI_R\).</div>
+    <div class="grid-box"><strong>\(Z_c,\gamma\)</strong>Characteristic impedance och propagation constant.</div>
+    <div class="grid-box"><strong>Equivalent \(\pi\)</strong>Exakt terminalekvivalent för en distributed line.</div>
+    <div class="grid-box"><strong>Voltage regulation</strong>Receiving-end voltage vid no-load jämfört med full-load.</div>
+    <div class="grid-box"><strong>SIL</strong>Konstant voltage magnitude och zero reactive-power flow för en ideal lossless line vid SIL.</div>
+    <div class="grid-box"><strong>Loadability</strong>Thermal limit, voltage-drop limit och steady-state stability limit.</div>
+    <div class="grid-box"><strong>Compensation</strong>Shunt reactor/capacitor, SVC/STATCOM, series capacitors.</div>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-track"><div class="progress" id="progress"></div></div>
+    <div class="progress-text" id="progressText">0 delar markerade som lästa</div>
+  </div>
+</section>
+
+<section class="card" id="design">
+  <h2>Transmission Line Design Considerations</h2>
+
+  <p>
+    Föreläsningen delar upp transmission-line design i electrical, mechanical, environmental och economic considerations.
+    Overhead lines består huvudsakligen av phase conductors, insulators, support structures och ofta shield wires.
+  </p>
+
+  <div class="table-wrap">
+  <table>
+    <tr><th>Area</th><th>Det du bör kunna</th></tr>
+    <tr><td>Conductors</td><td>Aluminum är det vanligaste conductor materialet för overhead transmission. ACSR består av aluminum strands runt en steel core.</td></tr>
+    <tr><td>Bundling</td><td>Flera conductors per phase på EHV-lines ger lägre electric field strength vid conductor surface, mindre corona och lägre series reactance.</td></tr>
+    <tr><td>Thermal</td><td>Designen måste klara continuous, emergency-overload och short-circuit ratings. High-temperature conductors kan ge högre ampacity och mindre thermal sag.</td></tr>
+    <tr><td>Insulation</td><td>Antal/type av insulator strings samt phase-to-phase och phase-to-tower clearances.</td></tr>
+    <tr><td>Lightning</td><td>Shield wires placeras ovanför phase conductors för att fånga lightning strokes och är grounded to the tower.</td></tr>
+    <tr><td>Mechanical</td><td>Wind och ice loading, conductor/tower strength, vibration, conductor tension, dampers och bundle spacers.</td></tr>
+    <tr><td>Environmental</td><td>Land use, visual impact och annan påverkan på omgivningen.</td></tr>
+    <tr><td>Economic</td><td>Alla tekniska designkrav ska uppfyllas till lägsta rimliga total cost, inklusive kostnaden för line losses.</td></tr>
+  </table>
+  </div>
+
+  <div class="note">
+    Conductor spacing, conductor type, size och bundle configuration påverkar direkt line series impedance och shunt admittance.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan de viktigaste design considerations</label>
+</section>
+
+<section class="card" id="parameters">
+  <h2>Transmission-line parameters: \(R,G,L,C\)</h2>
+
+  <div class="table-wrap">
+  <table>
+    <tr><th>Parameter</th><th>Fysisk betydelse</th><th>Roll i modellen</th></tr>
+    <tr><td>\(R\)</td><td>Real-power loss i conductorn</td><td>Series impedance</td></tr>
+    <tr><td>\(G\)</td><td>Real-power loss från leakage och corona</td><td>Shunt admittance</td></tr>
+    <tr><td>\(L\)</td><td>Magnetic field orsakat av current</td><td>Series reactance</td></tr>
+    <tr><td>\(C\)</td><td>Electric field orsakat av voltage</td><td>Shunt susceptance</td></tr>
+  </table>
+  </div>
+
+  <details open>
+    <summary>Resistance \(R\)</summary>
+    <div class="details-content">
+      <div class="formula"><span class="eqno">4.2.1</span>
+      \[
+        R_{\mathrm{dc},T}=\frac{\rho_T l}{A}
+      \]</div>
+
+      <p>Resistance påverkas av spiraling, temperature och frequency genom skin effect. För magnetic conductors kan även current magnitude påverka resistance.</p>
+
+      <div class="formula"><span class="eqno">4.2.4</span>
+      \[
+        R_{\mathrm{ac}}=\frac{P_{\mathrm{loss}}}{|I|^2}
+      \]</div>
+
+      <div class="note">
+        Vid power frequency är AC resistance normalt bara något högre än DC resistance, men i praktiken används vanligtvis manufacturer data.
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Conductance \(G\)</summary>
+    <div class="details-content">
+      <p>
+        \(G\) representerar real-power loss mellan conductors eller mellan conductor och ground, främst från insulator leakage och corona.
+        För overhead lines är \(G\) normalt mycket liten jämfört med den capacitive delen av shunt admittance.
+      </p>
+
+      <div class="formula">
+      \[
+        y=G+j\omega C
+        \qquad\text{och ofta}\qquad
+        y\approx j\omega C
+      \]</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Inductance \(L\)</summary>
+    <div class="details-content">
+      <p>För en completely transposed three-phase line används geometric-mean phase spacing:</p>
+
+      <div class="formula"><span class="eqno">Deq</span>
+      \[
+        D_{\mathrm{eq}}
+        =
+        (D_{ab}D_{bc}D_{ca})^{1/3}
+      \]</div>
+
+      <div class="formula">
+      \[
+        L_a
+        =
+        2\times10^{-7}
+        \ln\!\left(\frac{D_{\mathrm{eq}}}{D_s}\right)
+        \ \mathrm{H/m}
+      \]</div>
+
+      <div class="formula">
+      \[
+        X=\omega L
+      \]</div>
+
+      <div class="note warning">
+        För inductance används conductor <strong>GMR</strong>, \(D_s\), medan capacitance utgår från outside radius.
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Capacitance \(C\)</summary>
+    <div class="details-content">
+      <div class="formula"><span class="eqno">4.10.1</span>
+      \[
+        C_{an}
+        =
+        \frac{2\pi\varepsilon}
+        {\ln(D_{\mathrm{eq}}/r)}
+        \ \mathrm{F/m}
+      \]</div>
+
+      <div class="formula">
+      \[
+        I_{\mathrm{chg}}
+        =
+        j\omega C V
+      \]</div>
+
+      <div class="formula"><span class="eqno">4.10.12</span>
+      \[
+        Q_{C,3\phi}
+        =
+        \omega C_{an}V_{LL}^2
+      \]</div>
+
+      <div class="note good">
+        Transmission-line capacitance <strong>levererar reactive power</strong>. Därför blir line-charging effects särskilt viktiga vid light load och på långa EHV-lines.
+      </div>
+    </div>
+  </details>
+
+  <label class="check"><input type="checkbox" data-progress> Jag förstår \(R,G,L,C\) och deras circuit roles</label>
+</section>
+
+<section class="card" id="transposition">
+  <h2>Conductor transposition (fastransponering)</h2>
+
+  <p>
+    Unequal phase spacing gör att phase conductors får olika electromagnetic environment och därmed olika inductance och capacitance.
+    Vid complete conductor transposition byter faserna fysisk position längs linjen så att varje fas upptar varje position under en tredjedel av line length.
+  </p>
+
+  <div class="formula">
+  \[
+    D_{\mathrm{eq}}
+    =
+    (D_{ab}D_{bc}D_{ca})^{1/3}
+  \]</div>
+
+  <div class="note good">
+    Efter complete transposition blir de genomsnittliga positive-sequence phase parameters lika för de tre faserna.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag förstår varför transposition används</label>
+</section>
+
+<section class="card" id="bundling">
+  <h2>Bundled conductors</h2>
+
+  <p>
+    EHV-lines använder ofta bundles med två, tre eller fyra conductors per phase. Bundling minskar electric field strength vid conductor surface,
+    vilket reducerar corona, audible noise och communications interference. Samtidigt ökar effective GMR och series reactance minskar.
+  </p>
+
+  <h3>Effective bundle GMR för inductance</h3>
+
+  <div class="formula"><span class="eqno">2-conductor</span>
+  \[
+    D_{SL}=\sqrt{D_s d}
+  \]</div>
+
+  <div class="formula"><span class="eqno">3-conductor</span>
+  \[
+    D_{SL}=(D_s d^2)^{1/3}
+  \]</div>
+
+  <div class="formula"><span class="eqno">4-conductor</span>
+  \[
+    D_{SL}=1.091(D_s d^3)^{1/4}
+  \]</div>
+
+  <h3>Equivalent bundle radius för capacitance</h3>
+
+  <div class="formula"><span class="eqno">2-conductor</span>
+  \[
+    D_{SC}=\sqrt{rd}
+  \]</div>
+
+  <div class="formula"><span class="eqno">3-conductor</span>
+  \[
+    D_{SC}=(rd^2)^{1/3}
+  \]</div>
+
+  <div class="formula"><span class="eqno">4-conductor</span>
+  \[
+    D_{SC}=1.091(rd^3)^{1/4}
+  \]</div>
+
+  <div class="formula">
+  \[
+    C_{an}
+    =
+    \frac{2\pi\varepsilon}
+    {\ln(D_{\mathrm{eq}}/D_{SC})}
+  \]</div>
+
+  <div class="note warning">
+    <strong>Inductance:</strong> använd \(D_s\) / GMR. <strong>Capacitance:</strong> använd outside radius \(r\).
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan skilja bundle GMR för \(L\) från equivalent radius för \(C\)</label>
+</section>
+
+<section class="card" id="models">
+  <h2>Transmission-line models</h2>
+
+  <div class="formula">
+  \[
+    z=R+j\omega L
+    \qquad
+    [\Omega/\text{length}]
+  \]</div>
+
+  <div class="formula">
+  \[
+    y=G+j\omega C
+    \qquad
+    [\mathrm S/\text{length}]
+  \]</div>
+
+  <div class="formula">
+  \[
+    Z=zl,
+    \qquad
+    Y=yl
+  \]</div>
+
+  <div class="table-wrap">
+  <table>
+    <tr><th>Model</th><th>Typisk längd för 60-Hz overhead line</th><th>Model</th></tr>
+    <tr><td>Short</td><td>\(<25\) km</td><td>Endast lumped series \(Z\); shunt admittance försummas.</td></tr>
+    <tr><td>Medium</td><td>25–250 km</td><td>Nominal \(\pi\): \(Z\) i serie och \(Y/2\) som shunt i vardera änden.</td></tr>
+    <tr><td>Long</td><td>\(>250\) km</td><td>Distributed \(z\) och \(y\); differential equations och exact ABCD.</td></tr>
+  </table>
+  </div>
+
+  <div class="note warning">
+    <strong>Short line</strong> betyder inte <strong>lossless line</strong>. Short-line modellen kan fortfarande innehålla \(R+jX\).
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan välja rätt line model</label>
+</section>
+
+<section class="card" id="abcd">
+  <h2>ABCD parameters och Table 5.1</h2>
+
+  <div class="formula">
+  \[
+    \begin{bmatrix}
+      V_S\\ I_S
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+      A&B\\ C&D
+    \end{bmatrix}
+    \begin{bmatrix}
+      V_R\\ I_R
+    \end{bmatrix}
+  \]</div>
+
+  <div class="formula">
+  \[
+    V_S=AV_R+BI_R,
+    \qquad
+    I_S=CV_R+DI_R
+  \]</div>
+
+  <p>\(A\) och \(D\) är dimensionless, \(B\) har enheten \(\Omega\) och \(C\) har enheten S.</p>
+
+  <div class="formula">
+  \[
+    AD-BC=1
+  \]</div>
+
+  <div class="table-wrap">
+  <table>
+    <tr><th>Line</th><th>\(A=D\)</th><th>\(B\)</th><th>\(C\)</th></tr>
+    <tr><td>Short</td><td>\(1\)</td><td>\(Z\)</td><td>\(0\)</td></tr>
+    <tr><td>Medium nominal \(\pi\)</td><td>\(\displaystyle 1+\frac{YZ}{2}\)</td><td>\(Z\)</td><td>\(\displaystyle Y\left(1+\frac{YZ}{4}\right)\)</td></tr>
+    <tr><td>Long exact</td><td>\(\cosh(\gamma l)\)</td><td>\(Z_c\sinh(\gamma l)\)</td><td>\(\displaystyle \frac{1}{Z_c}\sinh(\gamma l)\)</td></tr>
+    <tr><td>Lossless</td><td>\(\cos(\beta l)\)</td><td>\(jZ_c\sin(\beta l)\)</td><td>\(\displaystyle j\frac{\sin(\beta l)}{Z_c}\)</td></tr>
+  </table>
+  </div>
+
+  <div class="note warning">
+    I nominal-\(\pi\): \(j\cdot j=-1\). Om \(Z\approx jX\) och \(Y\approx jB\) blir \(YZ\) ett negativt reellt tal.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan Table 5.1 och ABCD units</label>
+</section>
+
+<section class="card" id="longline">
+  <h2>Long transmission line – distributed model</h2>
+
+  <div class="formula">
+  \[
+    Z_c=\sqrt{\frac{z}{y}}
+  \]</div>
+
+  <div class="formula">
+  \[
+    \gamma=\sqrt{zy}=\alpha+j\beta
+  \]</div>
+
+  <p>
+    \(\alpha\) är attenuation constant och \(\beta\) är phase constant.
+  </p>
+
+  <h3>Voltage och current längs linjen</h3>
+
+  <div class="formula"><span class="eqno">5.2.27</span>
+  \[
+    V(x)
+    =
+    \cosh(\gamma x)V_R
+    +
+    Z_c\sinh(\gamma x)I_R
+  \]</div>
+
+  <div class="formula"><span class="eqno">5.2.28</span>
+  \[
+    I(x)
+    =
+    \frac{1}{Z_c}\sinh(\gamma x)V_R
+    +
+    \cosh(\gamma x)I_R
+  \]</div>
+
+  <h3>Exact ABCD vid sending end</h3>
+
+  <div class="formula">
+  \[
+    A=D=\cosh(\gamma l)
+  \]</div>
+
+  <div class="formula">
+  \[
+    B=Z_c\sinh(\gamma l)
+  \]</div>
+
+  <div class="formula">
+  \[
+    C=\frac{1}{Z_c}\sinh(\gamma l)
+  \]</div>
+
+  <div class="note">
+    Exact distributed-line ABCD gäller för alla line lengths, men i kursens/bookens indelning används den framför allt för overhead lines längre än ungefär 250 km.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag förstår \(Z_c,\gamma\) och exact long-line ABCD</label>
+</section>
+
+<section class="card" id="equivpi">
+  <h2>Equivalent \(\pi\)-circuit för en long line</h2>
+
+  <p>
+    Equivalent \(\pi\) har samma circuit topology som nominal \(\pi\), men använder korrigerade värden \(Z'\) och \(Y'\)
+    så att dess ABCD parameters exakt matchar den distributed line modellen.
+  </p>
+
+  <div class="formula"><span class="eqno">5.3.4</span>
+  \[
+    Z'
+    =
+    Z_c\sinh(\gamma l)
+  \]</div>
+
+  <div class="formula"><span class="eqno">5.3.8</span>
+  \[
+    \frac{Y'}{2}
+    =
+    \frac{\tanh(\gamma l/2)}{Z_c}
+  \]</div>
+
+  <div class="formula">
+  \[
+    Z'=ZF_1,
+    \qquad
+    F_1=\frac{\sinh(\gamma l)}{\gamma l}
+  \]</div>
+
+  <div class="formula">
+  \[
+    \frac{Y'}{2}
+    =
+    \frac{Y}{2}F_2,
+    \qquad
+    F_2=\frac{\tanh(\gamma l/2)}{\gamma l/2}
+  \]</div>
+
+  <div class="note warning">
+    <strong>Nominal \(\pi\) ≠ equivalent \(\pi\).</strong>
+    Nominal \(\pi\) använder lumped \(Z\) och \(Y\), medan equivalent \(\pi\) korrigerar dem för att återskapa exact terminal behavior hos en long line.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan skilja nominal \(\pi\) och equivalent \(\pi\)</label>
+</section>
+
+<section class="card" id="voltage">
+  <h2>Voltage regulation och verkningsgrad</h2>
+
+  <div class="formula"><span class="eqno">5.1.18</span>
+  \[
+    \%VR
+    =
+    \frac{|V_{R,NL}|-|V_{R,FL}|}
+    {|V_{R,FL}|}
+    \times100
+  \]</div>
+
+  <p>Vid no-load är \(I_{R,NL}=0\), vilket ger:</p>
+
+  <div class="formula"><span class="eqno">5.1.19</span>
+  \[
+    V_{R,NL}
+    =
+    \frac{V_S}{A}
+  \]</div>
+
+  <div class="grid">
+    <div class="grid-box"><strong>Lagging p.f.</strong>Ger typiskt större voltage drop och större positiv voltage regulation.</div>
+    <div class="grid-box"><strong>Leading p.f.</strong>Ger mindre voltage regulation, som även kan bli negativ.</div>
+  </div>
+
+  <p>Line efficiency kan skrivas:</p>
+
+  <div class="formula">
+  \[
+    \eta
+    =
+    \frac{P_R}{P_S}\times100\%
+  \]</div>
+
+  <div class="note">
+    Föreläsningen använder ungefär 10% voltage regulation som en praktisk riktlinje i det behandlade sammanhanget.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan voltage regulation och no-load relationen</label>
+</section>
+
+<section class="card" id="lossless">
+  <h2>Lossless line, wavelength och SIL</h2>
+
+  <div class="formula">
+  \[
+    R=0,
+    \qquad
+    G=0
+  \]</div>
+
+  <div class="formula">
+  \[
+    z=j\omega L,
+    \qquad
+    y=j\omega C
+  \]</div>
+
+  <div class="formula">
+  \[
+    Z_c
+    =
+    \sqrt{\frac{L}{C}}
+  \]</div>
+
+  <div class="formula">
+  \[
+    \gamma=j\beta,
+    \qquad
+    \beta=\omega\sqrt{LC}
+  \]</div>
+
+  <div class="formula">
+  \[
+    A=D=\cos(\beta l),
+    \quad
+    B=jZ_c\sin(\beta l),
+    \quad
+    C=j\frac{\sin(\beta l)}{Z_c}
+  \]</div>
+
+  <h3>Wavelength och propagation velocity</h3>
+
+  <div class="formula">
+  \[
+    \lambda
+    =
+    \frac{2\pi}{\beta}
+    =
+    \frac{1}{f\sqrt{LC}}
+  \]</div>
+
+  <div class="formula">
+  \[
+    v
+    =
+    f\lambda
+    =
+    \frac{1}{\sqrt{LC}}
+  \]</div>
+
+  <p>
+    För overhead lines är \(v\) ungefär \(3\times10^8\) m/s. Vid 60 Hz blir wavelength ungefär 5000 km.
+  </p>
+
+  <h3>Surge Impedance Loading</h3>
+
+  <div class="formula"><span class="eqno">5.4.21</span>
+  \[
+    \mathrm{SIL}
+    =
+    \frac{V_{\mathrm{rated}}^2}{Z_c}
+  \]</div>
+
+  <div class="grid">
+    <div class="grid-box"><strong>At SIL</strong>Voltage magnitude är konstant längs en ideal lossless line.</div>
+    <div class="grid-box"><strong>At SIL</strong>Reactive-power flow är zero.</div>
+    <div class="grid-box"><strong>Below SIL</strong>Linen beter sig netto-capacitive och tenderar att höja voltage.</div>
+    <div class="grid-box"><strong>Above SIL</strong>Linen beter sig netto-inductive och voltage tenderar att sjunka.</div>
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag förstår lossless line, wavelength och SIL</label>
+</section>
+
+<section class="card" id="power">
+  <h2>Real-power transfer och teoretiskt maximum</h2>
+
+  <p>För en lossless line gäller:</p>
+
+  <div class="formula"><span class="eqno">5.4.26</span>
+  \[
+    P
+    =
+    \frac{V_SV_R}{X'}
+    \sin\delta
+  \]</div>
+
+  <div class="formula"><span class="eqno">5.4.27</span>
+  \[
+    P_{\max}
+    =
+    \frac{V_SV_R}{X'}
+    \qquad
+    (\delta=90^\circ)
+  \]</div>
+
+  <div class="note warning">
+    Detta är den <strong>theoretical steady-state stability limit</strong>, inte en normal operating point.
+  </div>
+
+  <h3>Lossy long line</h3>
+
+  <p>Om \(A=|A|\angle\theta_A\) och \(B=|B|\angle\theta_B\):</p>
+
+  <div class="formula"><span class="eqno">5.5.3</span>
+  \[
+    P_R
+    =
+    \frac{V_RV_S}{|B|}
+    \cos(\theta_B-\delta)
+    -
+    \frac{|A|V_R^2}{|B|}
+    \cos(\theta_B-\theta_A)
+  \]</div>
+
+  <div class="formula"><span class="eqno">5.5.6</span>
+  \[
+    P_{R,\max}
+    =
+    \frac{V_RV_S}{|B|}
+    -
+    \frac{|A|V_R^2}{|B|}
+    \cos(\theta_B-\theta_A)
+  \]</div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag förstår skillnaden mellan theoretical max och practical loading</label>
+</section>
+
+<section class="card" id="loadability">
+  <h2>Line loadability</h2>
+
+  <p>Tre huvudsakliga line-loading limits:</p>
+
+  <div class="table-wrap">
+  <table>
+    <tr><th>Limit</th><th>Fysisk orsak</th><th>Typiskt viktig för</th></tr>
+    <tr><td>Thermal</td><td>Conductor/equipment heating, sag och tensile-strength limits</td><td>Short lines</td></tr>
+    <tr><td>Voltage drop</td><td>Receiving-end voltage blir för låg vid heavy load</td><td>Intermediate line lengths</td></tr>
+    <tr><td>Steady-state stability</td><td>Angular separation och synchronism</td><td>Very long lines</td></tr>
+  </table>
+  </div>
+
+  <p>
+    Kursboken placerar practical loadability under den theoretical limit som fås vid \(\delta=90^\circ\).
+    Practical loadability använder voltage-drop criteria och betydligt mindre angle differences för att behålla stability margin.
+  </p>
+
+  <div class="note">
+    Kort sammanfattning: short lines → ofta thermal limit; längre lines → voltage-drop limit; very long lines → stability blir allt viktigare.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan de tre loadability limits</label>
+</section>
+
+<section class="card" id="compensation">
+  <h2>Reactive compensation techniques</h2>
+
+  <div class="table-wrap">
+  <table>
+    <tr><th>Device</th><th>Reactive effekt</th><th>Typisk användning</th></tr>
+    <tr><td>Shunt reactor</td><td>Absorberar \(Q\)</td><td>Light load / minska overvoltage</td></tr>
+    <tr><td>Shunt capacitor</td><td>Levererar \(Q\)</td><td>Heavy load / ge voltage support</td></tr>
+    <tr><td>SVC</td><td>Kontrollerbar absorption/leverans av \(Q\)</td><td>Voltage regulation / ökad loadability</td></tr>
+    <tr><td>STATCOM</td><td>Snabb och kontrollerbar \(Q\)-support</td><td>Dynamisk voltage support</td></tr>
+    <tr><td>Series capacitor</td><td>Minskar net series reactance</td><td>Minskar voltage drop och ökar power-transfer capability</td></tr>
+  </table>
+  </div>
+
+  <h3>Series compensation</h3>
+
+  <div class="formula">
+  \[
+    X_{\mathrm{eff}}
+    \approx
+    X_{\mathrm{line}}
+    \left(1-\frac{N_C}{100}\right)
+  \]</div>
+
+  <p>
+    Series capacitor banks behöver protection/bypass under faults och kan introducera subsynchronous resonance.
+  </p>
+
+  <h3>Shunt compensation som andel av line admittance</h3>
+
+  <div class="formula">
+  \[
+    Y_{\mathrm{eq}}
+    \approx
+    Y'
+    \left(1-\frac{N_L}{100}\right)
+  \]</div>
+
+  <div class="note warning">
+    Shunt reactors är användbara vid light load men kan minska loadability om de lämnas inkopplade vid heavy load.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag kan reactor/capacitor/SVC/STATCOM/series compensation</label>
+</section>
+
+<section class="card" id="extensions">
+  <h2>Utvidgningar i kursboken – bra att känna igen</h2>
+
+  <p>
+    Kursboken går längre än föreläsningens huvudfokus i Chapter 4. Följande områden finns i boken men är mindre centrala för vårt quiz:
+  </p>
+
+  <div class="grid">
+    <div class="grid-box"><strong>Neutral conductors & earth return</strong>Generalized series-impedance matrices för lines med neutral conductors och earth return.</div>
+    <div class="grid-box"><strong>Electric field at conductor/ground</strong>Används för corona-, insulation- och field-strength studies.</div>
+    <div class="grid-box"><strong>Parallel-circuit lines</strong>Mutual coupling och beräkning av equivalent parameters.</div>
+    <div class="grid-box"><strong>HVDC case study</strong>Bakgrund i kursboken, men inte en del av de centrala AC line equations ovan.</div>
+  </div>
+
+  <div class="note purple">
+    Jag har inte tagit med alla långa derivations från dessa book-only sections eftersom de inte framgår som centrala i föreläsningen eller quizet.
+    Du bör däremot känna igen vad områdena handlar om.
+  </div>
+
+  <label class="check"><input type="checkbox" data-progress> Jag känner igen book-only extensions</label>
+</section>
+
+<section class="card" id="formulas">
+  <h2>Formelsamling – Kapitel 4–5</h2>
+
+  <p>Alla centrala formler från teoridelen är samlade här för snabb repetition.</p>
+
+  <h3>Resistance och grundläggande line parameters</h3>
+
+  <div class="formula">
+  \[
+    R_{\mathrm{dc},T}=\frac{\rho_T l}{A}
+  \]</div>
+
+  <div class="formula">
+  \[
+    R_{\mathrm{ac}}=\frac{P_{\mathrm{loss}}}{|I|^2}
+  \]</div>
+
+  <div class="formula">
+  \[
+    z=R+j\omega L,
+    \qquad
+    y=G+j\omega C
+  \]</div>
+
+  <div class="formula">
+  \[
+    Z=zl,
+    \qquad
+    Y=yl
+  \]</div>
+
+  <h3>Conductor transposition, inductance och capacitance</h3>
+
+  <div class="formula">
+  \[
+    D_{\mathrm{eq}}
+    =
+    (D_{ab}D_{bc}D_{ca})^{1/3}
+  \]</div>
+
+  <div class="formula">
+  \[
+    L_a
+    =
+    2\times10^{-7}
+    \ln\!\left(\frac{D_{\mathrm{eq}}}{D_s}\right)
+  \]</div>
+
+  <div class="formula">
+  \[
+    X=\omega L
+  \]</div>
+
+  <div class="formula">
+  \[
+    C_{an}
+    =
+    \frac{2\pi\varepsilon}
+    {\ln(D_{\mathrm{eq}}/r)}
+  \]</div>
+
+  <div class="formula">
+  \[
+    I_{\mathrm{chg}}
+    =
+    j\omega CV
+  \]</div>
+
+  <div class="formula">
+  \[
+    Q_{C,3\phi}
+    =
+    \omega C_{an}V_{LL}^2
+  \]</div>
+
+  <h3>Bundled conductors</h3>
+
+  <div class="formula">
+  \[
+    D_{SL,2}=\sqrt{D_sd},
+    \quad
+    D_{SL,3}=(D_sd^2)^{1/3},
+    \quad
+    D_{SL,4}=1.091(D_sd^3)^{1/4}
+  \]</div>
+
+  <div class="formula">
+  \[
+    D_{SC,2}=\sqrt{rd},
+    \quad
+    D_{SC,3}=(rd^2)^{1/3},
+    \quad
+    D_{SC,4}=1.091(rd^3)^{1/4}
+  \]</div>
+
+  <div class="formula">
+  \[
+    C_{an}
+    =
+    \frac{2\pi\varepsilon}
+    {\ln(D_{\mathrm{eq}}/D_{SC})}
+  \]</div>
+
+  <h3>ABCD</h3>
+
+  <div class="formula">
+  \[
+    V_S=AV_R+BI_R,
+    \qquad
+    I_S=CV_R+DI_R
+  \]</div>
+
+  <div class="formula">
+  \[
+    AD-BC=1
+  \]</div>
+
+  <div class="formula">
+  \[
+    A=D=1,\qquad B=Z,\qquad C=0
+    \qquad\text{(short)}
+  \]</div>
+
+  <div class="formula">
+  \[
+    A=D=1+\frac{YZ}{2},
+    \quad
+    B=Z,
+    \quad
+    C=Y\left(1+\frac{YZ}{4}\right)
+    \qquad\text{(nominal \(\pi\))}
+  \]</div>
+
+  <h3>Long-line equations</h3>
+
+  <div class="formula">
+  \[
+    Z_c=\sqrt{\frac{z}{y}}
+  \]</div>
+
+  <div class="formula">
+  \[
+    \gamma=\sqrt{zy}=\alpha+j\beta
+  \]</div>
+
+  <div class="formula">
+  \[
+    V(x)=\cosh(\gamma x)V_R+Z_c\sinh(\gamma x)I_R
+  \]</div>
+
+  <div class="formula">
+  \[
+    I(x)=\frac{1}{Z_c}\sinh(\gamma x)V_R+\cosh(\gamma x)I_R
+  \]</div>
+
+  <div class="formula">
+  \[
+    A=D=\cosh(\gamma l),
+    \quad
+    B=Z_c\sinh(\gamma l),
+    \quad
+    C=\frac{\sinh(\gamma l)}{Z_c}
+  \]</div>
+
+  <h3>Equivalent \(\pi\)</h3>
+
+  <div class="formula">
+  \[
+    Z'=Z_c\sinh(\gamma l)
+  \]</div>
+
+  <div class="formula">
+  \[
+    \frac{Y'}{2}
+    =
+    \frac{\tanh(\gamma l/2)}{Z_c}
+  \]</div>
+
+  <div class="formula">
+  \[
+    F_1=\frac{\sinh(\gamma l)}{\gamma l},
+    \qquad
+    F_2=\frac{\tanh(\gamma l/2)}{\gamma l/2}
+  \]</div>
+
+  <h3>Voltage regulation och verkningsgrad</h3>
+
+  <div class="formula">
+  \[
+    \%VR
+    =
+    \frac{|V_{R,NL}|-|V_{R,FL}|}
+    {|V_{R,FL}|}\times100
+  \]</div>
+
+  <div class="formula">
+  \[
+    V_{R,NL}=\frac{V_S}{A}
+  \]</div>
+
+  <div class="formula">
+  \[
+    \eta=\frac{P_R}{P_S}\times100\%
+  \]</div>
+
+  <h3>Lossless line, wavelength och SIL</h3>
+
+  <div class="formula">
+  \[
+    Z_c=\sqrt{\frac{L}{C}},
+    \qquad
+    \beta=\omega\sqrt{LC}
+  \]</div>
+
+  <div class="formula">
+  \[
+    A=D=\cos(\beta l),
+    \quad
+    B=jZ_c\sin(\beta l),
+    \quad
+    C=j\frac{\sin(\beta l)}{Z_c}
+  \]</div>
+
+  <div class="formula">
+  \[
+    \lambda=\frac{2\pi}{\beta}
+    =
+    \frac{1}{f\sqrt{LC}}
+  \]</div>
+
+  <div class="formula">
+  \[
+    v=\frac{1}{\sqrt{LC}}
+  \]</div>
+
+  <div class="formula">
+  \[
+    \mathrm{SIL}
+    =
+    \frac{V_{\mathrm{rated}}^2}{Z_c}
+  \]</div>
+
+  <h3>Power transfer och compensation</h3>
+
+  <div class="formula">
+  \[
+    P=\frac{V_SV_R}{X'}\sin\delta
+  \]</div>
+
+  <div class="formula">
+  \[
+    P_{\max}=\frac{V_SV_R}{X'}
+  \]</div>
+
+  <div class="formula">
+  \[
+    P_R
+    =
+    \frac{V_RV_S}{|B|}
+    \cos(\theta_B-\delta)
+    -
+    \frac{|A|V_R^2}{|B|}
+    \cos(\theta_B-\theta_A)
+  \]</div>
+
+  <div class="formula">
+  \[
+    P_{R,\max}
+    =
+    \frac{V_RV_S}{|B|}
+    -
+    \frac{|A|V_R^2}{|B|}
+    \cos(\theta_B-\theta_A)
+  \]</div>
+
+  <div class="formula">
+  \[
+    X_{\mathrm{eff}}
+    \approx
+    X_{\mathrm{line}}
+    \left(1-\frac{N_C}{100}\right)
+  \]</div>
+
+  <div class="formula">
+  \[
+    Y_{\mathrm{eq}}
+    \approx
+    Y'
+    \left(1-\frac{N_L}{100}\right)
+  \]</div>
+</section>
+
+<section class="card" id="traps">
+  <h2>Vanliga fallgropar</h2>
+
+  <div class="trap-list">
+    <div class="trap-item"><div class="trap-title">1. Blandar du \(z\) och \(Z\)?</div><div class="trap-text">\(z\) är series impedance per unit length; \(Z=zl\) är total series impedance.</div></div>
+    <div class="trap-item"><div class="trap-title">2. Blandar du \(y\) och \(Y\)?</div><div class="trap-text">\(y\) är shunt admittance per unit length; \(Y=yl\) är total shunt admittance.</div></div>
+    <div class="trap-item"><div class="trap-title">3. Glömmer du \(j^2=-1\)?</div><div class="trap-text">Det påverkar tecknet på \(YZ\) i nominal-\(\pi\).</div></div>
+    <div class="trap-item"><div class="trap-title">4. Blandar du ihop GMR och outside radius?</div><div class="trap-text">Inductance använder GMR \(D_s\), medan capacitance använder outside radius \(r\).</div></div>
+    <div class="trap-item"><div class="trap-title">5. Blandar du nominal \(\pi\) och equivalent \(\pi\)?</div><div class="trap-text">Nominal \(\pi\) är en medium-line approximation; equivalent \(\pi\) matchar exact distributed-line ABCD.</div></div>
+    <div class="trap-item"><div class="trap-title">6. Antar du short line = lossless?</div><div class="trap-text">Short-line modellen försummar shunt admittance, men resistance kan fortfarande finnas.</div></div>
+    <div class="trap-item"><div class="trap-title">7. Glömmer du vad SIL betyder?</div><div class="trap-text">Vid SIL är voltage magnitude konstant och net reactive-power flow zero för en ideal lossless line.</div></div>
+    <div class="trap-item"><div class="trap-title">8. Blandar du shunt reactor och capacitor?</div><div class="trap-text">En reactor absorberar \(Q\); en capacitor levererar \(Q\).</div></div>
+    <div class="trap-item"><div class="trap-title">9. Tolkar du \(\delta=90^\circ\) som normal operation?</div><div class="trap-text">Det är en theoretical maximum/stability limit, inte ett practical operating point.</div></div>
+    <div class="trap-item"><div class="trap-title">10. Glömmer du line-to-line voltage i SIL?</div><div class="trap-text">För total three-phase SIL används rated line-to-line voltage i \(V^2/Z_c\).</div></div>
+  </div>
+
+  <br>
+  <a class="button primary" href="index.html">Gör Kapitel 4–5 quizet</a>
+</section>
+
+</main>
+</div>
+
+
+<script>
+const checks=[...document.querySelectorAll('[data-progress]')];
+const progress=document.getElementById('progress');
+const progressText=document.getElementById('progressText');
+const storageKey='chapter45TheoryLanguagePolishV7';
+
+function loadProgress(){
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem(storageKey)||'{}')}catch(e){}
+  checks.forEach((c,i)=>c.checked=!!saved[i]);
+  updateProgress();
+}
+
+function updateProgress(){
+  const saved={};
+  let done=0;
+  checks.forEach((c,i)=>{
+    saved[i]=c.checked;
+    if(c.checked) done++;
+  });
+  const pct=checks.length?Math.round(done/checks.length*100):0;
+  progress.style.width=pct+'%';
+  progressText.textContent=done+' av '+checks.length+' delar markerade som lästa ('+pct+' %)';
+  localStorage.setItem(storageKey,JSON.stringify(saved));
+}
+
+checks.forEach(c=>c.addEventListener('change',updateProgress));
+loadProgress();
+</script>
+
+</body>
+</html>
