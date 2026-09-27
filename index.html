@@ -30,6 +30,21 @@
       margin-bottom: 35px;
     }
 
+    .quiz-card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      color: #111827;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: 0.2s;
+    }
+
+    .quiz-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+
     .quiz-link {
       display: block;
       background: white;
@@ -56,6 +71,35 @@
       margin-top: 6px;
       color: #6b7280;
     }
+
+    .quiz-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .action-button {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      background: #f3f4f6;
+      color: #111827;
+      border: 1px solid #d1d5db;
+      transition: 0.2s;
+    }
+
+    .action-button.primary {
+      background: #111827;
+      color: white;
+      border-color: #111827;
+    }
+
+    .action-button:hover {
+      opacity: 0.88;
+    }
   </style>
 </head>
 
@@ -69,7 +113,8 @@
     Välj kapitel
   </div>
 
-  <a class="quiz-link" href="chapter_4_5/">
+  <div class="quiz-card">
+
     <div class="quiz-title">
       Kapitel 4–5 – Transmission Lines
     </div>
@@ -78,9 +123,26 @@
       Transmission-line parameters, transposition, bundling,
       ABCD, line models, SIL, voltage regulation och compensation.
     </div>
-  </a>
+
+    <div class="quiz-actions">
+
+      <a class="action-button"
+         href="chapter_4_5/theory.html">
+        Läs teori
+      </a>
+
+      <a class="action-button primary"
+         href="chapter_4_5/">
+        Gör quiz
+      </a>
+
+    </div>
+
+  </div>
+
 
   <a class="quiz-link" href="chapter_8/">
+
     <div class="quiz-title">
       Kapitel 8 – Symmetrical Faults
     </div>
@@ -88,6 +150,7 @@
     <div class="quiz-description">
       R-L transients, generators, Thevenin, Zbus och circuit breakers.
     </div>
+
   </a>
 
 </div>
